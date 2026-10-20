@@ -82,13 +82,17 @@ code{background:var(--y);border:2px solid var(--k);border-radius:6px;padding:0 5
 .lv{display:flex;gap:2px}.lv i{width:7px;height:12px;border:2px solid var(--k);background:var(--c)}.lv i.f{background:var(--b)}
 .xdel{background:var(--r);color:#fff;border:2px solid var(--k);border-radius:8px;font:800 18px/1 Manrope;width:30px;height:30px;cursor:pointer;padding:0}
 .del{background:var(--r);color:#fff;border:2px solid var(--k);border-radius:8px;font:800 13px Manrope;padding:4px 10px;cursor:pointer;margin-top:8px}
-.msgs{height:50vh;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.msgs{height:calc(var(--vh,100vh) - 310px);min-height:200px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
 .m{display:flex;gap:8px;align-items:flex-end}.m.u{flex-direction:row-reverse}
 .m img{height:44px;width:44px;object-fit:cover;object-position:top;border:3px solid var(--k);border-radius:8px;background:var(--l)}
 .bub{max-width:78%;border:3px solid var(--k);border-radius:12px;padding:8px 12px;background:#fff;user-select:text;-webkit-user-select:text}.m.u .bub{background:var(--b)}
 .tw{border-bottom:2px dotted rgba(30,34,51,.5);cursor:pointer}
 .send{display:flex;gap:8px;padding:10px;border-top:3px solid var(--k)}.send .field{margin:0}
-.tip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(104px + env(safe-area-inset-bottom));background:var(--y);border:3px solid var(--k);box-shadow:4px 4px 0 var(--k);border-radius:12px;padding:10px 16px;z-index:5;max-width:90%;text-align:center}
+.tip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(104px + env(safe-area-inset-bottom));background:var(--y);border:3px solid var(--k);box-shadow:3px 3px 0 var(--k);border-radius:10px;padding:5px 12px;font-size:14px;z-index:5;max-width:90%;text-align:center}
+body.kb .top,body.kb #nav{display:none}
+body.kb{padding-bottom:12px}
+body.kb .msgs{height:calc(var(--vh,100vh) - 150px)}
+body.kb .tip{bottom:76px}
 .set{display:flex;justify-content:space-between;align-items:center;padding:8px 0;gap:10px}
 .set input[type=checkbox]{width:26px;height:26px;accent-color:var(--k)}
 .pop{position:fixed;left:50%;top:30%;transform:translateX(-50%);font:16px 'Press Start 2P',monospace;color:var(--c);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--k),-2px -2px 0 var(--k),2px -2px 0 var(--k),-2px 2px 0 var(--k);animation:pp .9s forwards;z-index:9;pointer-events:none}
@@ -198,6 +202,13 @@ async function fallbackEnrich({w,ru:given}){let m=[],ipa='',tr=given||'';
   if(!tr){try{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(w)+'&langpair=en|ru');tr=(await r.json()).responseData.translatedText||''}catch(e){}}
   if(!m.length)m=[{pos:'',ru:tr,def:'',ex:[]}];m.forEach(x=>x.ru=tr);return{w,ipa,m}}
 
+async function enrichOne(it,aiOnly){
+  if(canSync()){for(let k=0;k<2;k++){try{const d=await api('enrich',{items:[it]});const g=(d.words||[]).find(x=>x&&x.m&&x.m.length);
+      if(g){if(it.ru)g.m[0].ru=it.ru;return g}aiErr='ИИ вернул пустой или неверный ответ'}catch(e){aiErr=String(e.message||e).slice(0,250)}
+      await new Promise(r=>setTimeout(r,800))}}
+  return aiOnly?null:fallbackEnrich(it)}
+async function enrichMany(items,onEach,aiOnly){aiErr='';let idx=0;const out=new Array(items.length);
+  await Promise.all([0,1,2].map(async()=>{while(idx<items.length){const i=idx++;out[i]=await enrichOne(items[i],aiOnly);if(onEach)onEach(i,out[i])}}));return out}
 /* ================= router ================= */
 function go(name,arg){sfx.click();sayTok++;
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.go===name));
@@ -315,7 +326,7 @@ function qMatch(it){const L=shuffle(it.ws),R=shuffle(it.ws),bad=new Set();let se
     else{bad.add(sel.dataset.id);bad.add(b.dataset.id);[sel,b].forEach(o=>{o.classList.add('shake');setTimeout(()=>o.classList.remove('shake'),300)});sel.classList.remove('sel');sel=null;sfx.bad();fb('think','Не то. Попробуй ещё!','sad')}})}
 
 /* ================= ADD WORDS ================= */
-function parseLines(t){return t.split('\n').map(s=>s.trim()).filter(Boolean).map(l=>{const m=l.match(/^(.+?)(?:\s[-–—]\s|\s*[:=]\s*)(.+)$/);return m?{w:m[1].trim(),ru:m[2].trim()}:{w:l}})}
+function parseLines(t){return t.split(/[\n\r\u2028\u2029;]+/).map(x=>x.replace(/^\s*(?:[-•*·]+|\d+[.)])\s+/,'').replace(/[,\s]+$/,'').trim()).filter(Boolean).map(l=>{const m=l.match(/^(.+?)(?:\s[-–—]\s|\s*[:=]\s*)(.+)$/);return m?{w:m[1].trim(),ru:m[2].trim()}:{w:l}})}
 function add(){view(`<div class="win"><div class="tb pk"><span>add_words.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body">
   <p style="margin-top:0">Вставь слова с урока, <b>по одному на строку</b>. Перевод, значения и примеры подтянутся сами. Свой перевод можно дать так: <code>run into - столкнуться</code></p>
   <textarea id="ta" rows="8" placeholder="serendipity&#10;to wander&#10;run into - столкнуться"></textarea>
@@ -330,19 +341,17 @@ function add(){view(`<div class="win"><div class="tb pk"><span>add_words.exe</sp
     $('#addgo').disabled=true;$('#log').innerHTML=`<img src="${A('cat_think')}" height="60" alt=""><div style="font-size:13px;opacity:.7">ИИ думает, это может занять до полуминуты…</div><div id="lg"></div>`;
     const lg=$('#lg');items.forEach(x=>lg.innerHTML+=`<div id="w_${esc(x.w)}">… ${esc(x.w)}</div>`);
     let n=0;
-    for(let i=0;i<items.length;i+=5){const chunk=items.slice(i,i+5);const got=await enrich(chunk);
-      got.forEach((g,j)=>{const w=g.w||chunk[j].w;if(!g.m||!g.m.length)g.m=[{pos:'',ru:chunk[j].ru||'?',def:'',ex:[]}];
-        S.words.push({id:uid(),w:chunk[j].w,ipa:g.ipa||'',m:g.m,box:0,due:0,seen:0,ok:0,bad:0,u:Date.now()});n++;
-        const el=[...lg.children][i+j];if(el)el.innerHTML=`✓ ${esc(chunk[j].w)} — ${esc(ru(S.words[S.words.length-1]))}`})}
+    await enrichMany(items,(i,g)=>{const it=items[i];g=g||{};if(!g.m||!g.m.length)g.m=[{pos:'',ru:it.ru||'?',def:'',ex:[]}];
+      const w={id:uid(),w:it.w,ipa:g.ipa||'',m:g.m,box:0,due:0,seen:0,ok:0,bad:0,u:Date.now()};S.words.push(w);n++;
+      const el=lg.children[i];if(el)el.innerHTML=`✓ ${esc(it.w)} — ${esc(ru(w))}`});
     save();sfx.done();if(aiErr&&canSync())$('#log').insertAdjacentHTML('beforeend',`<div class="ans" style="background:var(--p)">ИИ не ответил, слова разобраны обычным словарём (без примеров с переводом). Причина: ${esc(aiErr)}</div>`);$('#log').firstChild.src=A('cat_happy');$('#log').insertAdjacentHTML('beforeend',`<div class="ans">Добавлено: ${n}</div><button class="btn w" data-go="words">К словарю</button>`);$('#addgo').disabled=false;$('#ta').value=''}}
 
 async function reenrich(list,out){
   if(!canSync()){out.innerHTML='<div class="ans" style="background:var(--p)">Для ИИ-разбора нужно подключить Worker в «Настройках».</div>';return}
   out.innerHTML=`<img src="${A('cat_think')}" height="60" alt=""><div style="font-size:13px;opacity:.7">ИИ разбирает ${list.length} слов, это может занять время…</div>`;
-  let n=0,err='';
-  for(let i=0;i<list.length;i+=5){const ch=list.slice(i,i+5);const got=await enrich(ch.map(w=>({w:w.w})));
-    if(aiErr){err=aiErr;break}
-    got.forEach((g,j)=>{if(g&&g.m&&g.m.length&&ch[j]){ch[j].m=g.m;ch[j].ipa=g.ipa||ch[j].ipa;ch[j].u=Date.now();n++}});save()}
+  let n=0;
+  await enrichMany(list.map(w=>({w:w.w})),(i,g)=>{if(g&&g.m&&g.m.length){list[i].m=g.m;list[i].ipa=g.ipa||list[i].ipa;list[i].u=Date.now();n++}},true);
+  save();const err=n<list.length?aiErr:'';
   out.innerHTML=`<div class="ans">Обновлено: ${n} из ${list.length}</div>`+(err?`<div class="ans" style="background:var(--p)">ИИ не ответил: ${esc(err)}</div>`:'')+`<button class="btn w" data-go="words">К словарю</button>`}
 /* ================= WORDS ================= */
 function words(){const L=live().sort((a,b)=>b.u-a.u);
@@ -358,10 +367,9 @@ function words(){const L=live().sort((a,b)=>b.u-a.u);
 function wrapWords(t){return String(t).split(/([A-Za-z][A-Za-z'’-]*)/).map((p,i)=>i%2?`<span class="tw">${esc(p)}</span>`:esc(p)).join('')}
 function chat(){if(!S.chat.length)S.chat.push({r:'a',t:"Hi! Let's chat in English. How was your day?"});
   view(`<div class="win"><div class="tb lc"><span>chat.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="msgs" id="msgs"></div>
-   <div class="send"><input class="field" id="cin" placeholder="Write in English…" autocomplete="off"><button class="btn" id="csend">→</button></div></div>
-   <p class="hint">тапни на любое английское слово — покажу перевод в контексте</p>`);
-  drawMsgs();$('#csend').onclick=send;$('#cin').onkeydown=e=>{if(e.key==='Enter')send()};
-  $('#msgs').onclick=async e=>{const t=e.target.closest('.tw');if(!t)return;sfx.click();const tip=$('#tip');tip.hidden=false;tip.textContent='…';
+   <div class="send"><input class="field" id="cin" placeholder="Write in English…" autocomplete="off"><button class="btn" id="csend">→</button></div></div>`);
+  drawMsgs();$('#csend').onmousedown=e=>e.preventDefault();$('#csend').onclick=send;$('#cin').onkeydown=e=>{if(e.key==='Enter')send()};
+  $('#msgs').onclick=async e=>{const t=e.target.closest('.tw');if(!t)return;sfx.click();const tip=$('#tip');tip.hidden=false;tip.textContent='…';clearTimeout(window._tt);window._tt=setTimeout(()=>tip.hidden=true,6000);
     const word=t.textContent,sent=t.closest('.bub').textContent;
     try{if(canSync()){const d=await api('context',{word,sentence:sent});tip.innerHTML=`<b>${esc(word)}</b> → ${esc(d.ru)}${d.note?`<br><small>${esc(d.note)}</small>`:''}`}
       else{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(word)+'&langpair=en|ru');tip.innerHTML=`<b>${esc(word)}</b> → ${esc((await r.json()).responseData.translatedText)}`}}
@@ -371,7 +379,7 @@ async function send(){const inp=$('#cin'),t=inp.value.trim();if(!t)return;inp.va
   if(!canSync()){S.chat.push({r:'a',t:'Connect the Worker in Settings, and I can answer you!'});save(false);drawMsgs();return}
   S.chat.push({r:'a',t:'…'});drawMsgs();
   try{const ws=shuffle(live()).sort((a,b)=>(a.box||0)-(b.box||0)).slice(0,10).map(w=>w.w);
-    const d=await api('chat',{msgs:S.chat.slice(0,-1).slice(-12).map(x=>({r:x.r,t:x.t})),words:ws});S.chat[S.chat.length-1].t=d.reply}
+    const d=await api('chat',{msgs:S.chat.slice(0,-1).slice(-12).map(x=>({r:x.r,t:x.t})),words:ws,tutor:S.set.tutor});S.chat[S.chat.length-1].t=d.reply}
   catch(e){S.chat[S.chat.length-1].t='Oops: '+String(e.message||e).slice(0,300)}
   save(false);drawMsgs()}
 
@@ -386,8 +394,14 @@ function settings(){const st=syncState==='ok'?'✓ подключено':syncSta
    <b>Общий словарь и ИИ</b><p style="font-size:14px;margin:4px 0">Нужен Cloudflare Worker (см. README). Одинаковый адрес и пароль у тебя и у репетитора.</p>
    <label>Адрес Worker<input class="field" data-set="worker" value="${esc(S.set.worker)}" placeholder="https://….workers.dev"></label>
    <label>Пароль<input class="field" type="password" data-set="pass" value="${esc(S.set.pass)}"></label>
-   <button class="btn w" data-act="sync">Синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-10-20 e</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
+   <button class="btn w" data-act="sync">Синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-10-20 g</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
 
+/* ================= клавиатура и высота окна ================= */
+const vv=window.visualViewport;
+const setVH=()=>document.documentElement.style.setProperty('--vh',(vv?vv.height:innerHeight)+'px');
+setVH();if(vv)vv.addEventListener('resize',setVH);addEventListener('resize',setVH);
+document.addEventListener('focusin',e=>{if(e.target.matches('input:not([type=checkbox]),textarea')){document.body.classList.add('kb');setVH();setTimeout(()=>{const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight},200)}});
+document.addEventListener('focusout',()=>setTimeout(()=>{const a=document.activeElement;if(!a||!a.matches('input:not([type=checkbox]),textarea'))document.body.classList.remove('kb')},120));
 /* ================= start ================= */
 head();document.querySelector('[data-go=home]').classList.add('on');home();pull().then(()=>{head();if($('#tutor'))home()});
 </script>
