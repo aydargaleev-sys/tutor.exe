@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#F7D84A">
 <title>WordQuest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,10 @@
 <style>
 :root{--y:#F7D84A;--p:#EE8FAE;--l:#C9B3F0;--b:#4EB1EE;--c:#FBF7EE;--k:#1E2233;--g:#8fdc9f;--r:#ee6a62}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%}
+html,body{margin:0;min-height:100%;max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
+body{touch-action:pan-y}
+.body,.def,.ex,#say,.ans,.log,.tip{overflow-wrap:anywhere}
+.m{min-width:0}
 body{font:600 16px/1.35 Manrope,system-ui,sans-serif;color:var(--k);background-color:var(--y);
  background-image:radial-gradient(rgba(30,34,51,.25) 1.5px,transparent 1.7px);background-size:18px 18px;
  padding-bottom:calc(96px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none}
@@ -80,18 +83,23 @@ code{background:var(--y);border:2px solid var(--k);border-radius:6px;padding:0 5
 .wrow{border-bottom:2px dashed rgba(30,34,51,.3);padding:10px 0;cursor:pointer}.wrow:last-child{border:0}
 .wrow .h{display:flex;justify-content:space-between;align-items:center;gap:8px}.wrow .d{display:none;margin-top:8px}.wrow.open .d{display:block}
 .lv{display:flex;gap:2px}.lv i{width:7px;height:12px;border:2px solid var(--k);background:var(--c)}.lv i.f{background:var(--b)}
+.xedit{background:var(--b);color:var(--k);border:2px solid var(--k);border-radius:8px;font:800 16px/1 Manrope;width:30px;height:30px;cursor:pointer;padding:0}
+.exe{display:grid;gap:6px;margin:8px 0;padding-left:8px;border-left:3px solid var(--l)}.exe .field,.mn .field{margin:0}
+.mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .xdel{background:var(--r);color:#fff;border:2px solid var(--k);border-radius:8px;font:800 18px/1 Manrope;width:30px;height:30px;cursor:pointer;padding:0}
 .del{background:var(--r);color:#fff;border:2px solid var(--k);border-radius:8px;font:800 13px Manrope;padding:4px 10px;cursor:pointer;margin-top:8px}
 .msgs{height:calc(var(--vh,100vh) - 310px);min-height:200px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
 .m{display:flex;gap:8px;align-items:flex-end}.m.u{flex-direction:row-reverse}
 .m img{height:44px;width:44px;object-fit:cover;object-position:top;border:3px solid var(--k);border-radius:8px;background:var(--l)}
-.bub{max-width:78%;border:3px solid var(--k);border-radius:12px;padding:8px 12px;background:#fff;user-select:text;-webkit-user-select:text}.m.u .bub{background:var(--b)}
+.bub{max-width:78%;border:3px solid var(--k);border-radius:12px;padding:8px 12px;background:#fff;user-select:text;-webkit-user-select:text;min-width:0;overflow-wrap:anywhere;word-break:break-word}.m.u .bub{background:var(--b)}
 .tw{border-bottom:2px dotted rgba(30,34,51,.5);cursor:pointer}
 .send{display:flex;gap:8px;padding:10px;border-top:3px solid var(--k)}.send .field{margin:0}
 .tip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(104px + env(safe-area-inset-bottom));background:var(--y);border:3px solid var(--k);box-shadow:3px 3px 0 var(--k);border-radius:10px;padding:5px 12px;font-size:14px;z-index:5;max-width:90%;text-align:center}
 body.kb .top,body.kb #nav{display:none}
-body.kb{padding-bottom:12px}
-body.kb .msgs{height:calc(var(--vh,100vh) - 150px)}
+body.kb{overflow:hidden;padding-bottom:0}
+body.kb #app{position:fixed;left:0;right:0;top:var(--vt,0px);height:var(--vh,100%);margin:0 auto;padding-top:8px;overflow-y:auto;overflow-x:hidden}
+body.kb .msgs{height:calc(var(--vh,100vh) - 125px)}
+.rst{background:var(--c);color:var(--k);border:2px solid var(--k);border-radius:6px;font:800 11px/1 Manrope;padding:4px 8px;cursor:pointer}
 body.kb .tip{bottom:76px}
 .set{display:flex;justify-content:space-between;align-items:center;padding:8px 0;gap:10px}
 .set input[type=checkbox]{width:26px;height:26px;accent-color:var(--k)}
@@ -139,7 +147,7 @@ const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(
 const pick=a=>a[Math.random()*a.length|0];
 const ic=(n,h=22)=>`<img class="ic" src="${A(n)}" height="${h}" width="${h}" style="object-fit:contain" alt="">`;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-function view(h){$('#view').innerHTML=h;scrollTo(0,0)}
+function view(h){const v=$('#view');v.onclick=null;v.innerHTML=h;scrollTo(0,0)}
 function head(){$('#cs').innerHTML=ic('flame',22)+S.st.streak;$('#cx').innerHTML=ic('coin',22)+S.st.xp}
 
 /* ================= sound ================= */
@@ -223,6 +231,8 @@ document.addEventListener('click',e=>{
   if(a==='exp'){sfx.click();t.closest('.wrow').classList.toggle('open')}
   if(a==='del'){const w=S.words.find(x=>x.id===t.dataset.id);if(w&&confirm('Удалить «'+w.w+'»?')){w.del=true;w.u=Date.now();save();words()}}
   if(a==='tilt'){enableTilt().then(ok=>{if(ok)settings()})}
+  if(a==='chatreset'){if(confirm('Начать новый диалог? Переписка очистится.')){sfx.click();S.chat=[];save(false);chat()}}
+  if(a==='edit'){sfx.click();editWord(t.dataset.id)}
   if(a==='redoall'){reenrich(live().filter(w=>!exs(w).length),$('#redoout'))}
   if(a==='testai'){const o=$('#aitest');o.textContent='…';api('chat',{msgs:[{r:'u',t:'Say hi in five words.'}],words:[]}).then(d=>o.textContent='✓ ИИ отвечает: '+d.reply).catch(e=>o.textContent='✗ '+String(e.message||e).slice(0,300))}
   if(a==='sync'){syncState='…';settings();push().then(()=>settings())}
@@ -359,14 +369,50 @@ function words(){const L=live().sort((a,b)=>b.u-a.u);
    ${L.some(w=>!exs(w).length)?'<button class="btn w lilac" data-act="redoall" style="margin-bottom:10px">Дополнить примеры ИИ</button><div id="redoout"></div>':''}
    <input class="field" id="srch" placeholder="Поиск…" style="margin-top:0">
    <div id="wl"></div></div></div>`);
-  const draw=f=>{$('#wl').innerHTML=L.filter(w=>!f||(w.w+ru(w)).toLowerCase().includes(f)).map(w=>`<div class="wrow"><div class="h" data-act="exp"><div><b style="font-size:18px">${esc(w.w)}</b> <span style="opacity:.7">— ${esc(ru(w))}</span></div><div style="display:flex;align-items:center;gap:8px"><div class="lv">${Array.from({length:7},(_,i)=>`<i class="${i<(w.box||0)?'f':''}"></i>`).join('')}</div><button class="xdel" data-act="del" data-id="${w.id}" title="Удалить">×</button></div></div>
-    <div class="d"><button class="sp" data-say="${esc(w.w)}">${ic('phones',20)}</button> <span class="ipa">${esc(w.ipa||'')}</span>${meanings(w)}<button class="del" data-act="del" data-id="${w.id}">Удалить</button></div></div>`).join('')||'<p class="center">Пока пусто</p>'};
+  const draw=f=>{$('#wl').innerHTML=L.filter(w=>!f||(w.w+ru(w)).toLowerCase().includes(f)).map(w=>`<div class="wrow"><div class="h" data-act="exp"><div><b style="font-size:18px">${esc(w.w)}</b> <span style="opacity:.7">— ${esc(ru(w))}</span></div><div style="display:flex;align-items:center;gap:8px"><div class="lv">${Array.from({length:7},(_,i)=>`<i class="${i<(w.box||0)?'f':''}"></i>`).join('')}</div><button class="xedit" data-act="edit" data-id="${w.id}" title="Изменить">✎</button><button class="xdel" data-act="del" data-id="${w.id}" title="Удалить">×</button></div></div>
+    <div class="d"><button class="sp" data-say="${esc(w.w)}">${ic('phones',20)}</button> <span class="ipa">${esc(w.ipa||'')}</span>${meanings(w)}<button class="btn" data-act="edit" data-id="${w.id}" style="padding:4px 12px;font-size:14px;margin:8px 8px 0 0">Изменить</button><button class="del" data-act="del" data-id="${w.id}">Удалить</button></div></div>`).join('')||'<p class="center">Пока пусто</p>'};
   draw('');$('#srch').oninput=e=>draw(e.target.value.toLowerCase().trim())}
+
+/* ================= EDIT WORD ================= */
+function editWord(id){const w=S.words.find(x=>x.id===id);if(!w)return;
+  const m=JSON.parse(JSON.stringify(w.m&&w.m.length?w.m:[{pos:'',ru:'',def:'',ex:[]}])),t={w:w.w,ipa:w.ipa||''};
+  const collect=()=>{t.w=($('#e_w').value||'').trim()||w.w;t.ipa=($('#e_ipa').value||'').trim();
+    m.forEach((x,i)=>{const b=document.querySelector(`.mn[data-i="${i}"]`);if(!b)return;
+      x.pos=b.querySelector('[data-f=pos]').value.trim();x.ru=b.querySelector('[data-f=ru]').value.trim();x.def=b.querySelector('[data-f=def]').value.trim();
+      x.ex=[...b.querySelectorAll('.exe')].map(r=>({en:r.querySelector('[data-f=en]').value.trim(),ru:r.querySelector('[data-f=exru]').value.trim()}))})};
+  const draw=(keep)=>{const y=scrollY;
+    view(`<div class="win"><div class="tb pk"><span>edit.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body">
+     <label>Слово<input class="field" id="e_w" value="${esc(t.w)}" style="margin-top:4px"></label>
+     <label>Транскрипция<input class="field" id="e_ipa" value="${esc(t.ipa)}" style="margin-top:4px"></label>
+     <button class="btn w lilac" data-ed="ai" style="margin-bottom:14px">ИИ: разобрать заново</button><div id="e_msg" style="font-size:14px;margin:-6px 0 10px"></div>
+     ${m.map((x,i)=>`<div class="mn" data-i="${i}"><div class="mhead"><b>Значение ${i+1}</b><button class="xdel" data-ed="delm" data-i="${i}">×</button></div>
+       <input class="field" data-f="pos" placeholder="часть речи: noun, verb…" value="${esc(x.pos)}">
+       <input class="field" data-f="ru" placeholder="перевод" value="${esc(x.ru)}" style="margin-top:6px">
+       <input class="field" data-f="def" placeholder="определение (English)" value="${esc(x.def)}" style="margin-top:6px">
+       ${(x.ex||[]).map((e,j)=>`<div class="exe"><input class="field" data-f="en" placeholder="пример (English)" value="${esc(e.en)}"><input class="field" data-f="exru" placeholder="перевод примера" value="${esc(e.ru)}"><button class="del" data-ed="delx" data-i="${i}" data-j="${j}" style="justify-self:start">убрать пример</button></div>`).join('')}
+       <button class="btn" data-ed="addx" data-i="${i}" style="padding:6px 12px;font-size:14px;margin-top:6px">+ пример</button></div>`).join('')}
+     <button class="btn w" data-ed="addm" style="margin-bottom:14px">+ значение</button>
+     <div class="row" style="margin-bottom:0"><button class="btn pink" data-ed="cancel">Отмена</button><button class="btn blue" data-ed="save">Сохранить</button></div></div></div>`);
+    if(keep)scrollTo(0,y);
+    $('#view').onclick=async e=>{const b=e.target.closest('[data-ed]');if(!b)return;const a=b.dataset.ed,i=+b.dataset.i,j=+b.dataset.j;sfx.click();
+      if(a==='cancel')return words();
+      collect();
+      if(a==='addm'){m.push({pos:'',ru:'',def:'',ex:[]});return draw(true)}
+      if(a==='delm'){m.splice(i,1);if(!m.length)m.push({pos:'',ru:'',def:'',ex:[]});return draw(true)}
+      if(a==='addx'){m[i].ex.push({en:'',ru:''});return draw(true)}
+      if(a==='delx'){m[i].ex.splice(j,1);return draw(true)}
+      if(a==='ai'){const msg=$('#e_msg');if(!canSync()){msg.textContent='Для ИИ нужно подключить Worker в «Настройках».';return}
+        b.disabled=true;msg.textContent='ИИ думает…';aiErr='';const g=await enrichOne({w:t.w},true);
+        if(g&&g.m&&g.m.length){m.splice(0,m.length,...g.m);t.ipa=g.ipa||t.ipa;draw(true);$('#e_msg').textContent='Готово. Проверь и нажми «Сохранить».'}
+        else{b.disabled=false;msg.textContent='ИИ не ответил: '+(aiErr||'ошибка')}return}
+      if(a==='save'){const keep=m.filter(x=>x.ru||x.def||x.pos||(x.ex||[]).some(e=>e.en||e.ru)).map(x=>({...x,ex:(x.ex||[]).filter(e=>e.en||e.ru)}));
+        w.w=t.w;w.ipa=t.ipa;w.m=keep.length?keep:[{pos:'',ru:'',def:'',ex:[]}];w.u=Date.now();save();sfx.good();words()}}};
+  draw(false)}
 
 /* ================= CHAT ================= */
 function wrapWords(t){return String(t).split(/([A-Za-z][A-Za-z'’-]*)/).map((p,i)=>i%2?`<span class="tw">${esc(p)}</span>`:esc(p)).join('')}
 function chat(){if(!S.chat.length)S.chat.push({r:'a',t:"Hi! Let's chat in English. How was your day?"});
-  view(`<div class="win"><div class="tb lc"><span>chat.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="msgs" id="msgs"></div>
+  view(`<div class="win"><div class="tb lc"><span>chat.exe</span><button class="rst" data-act="chatreset">↻ новый диалог</button></div><div class="msgs" id="msgs"></div>
    <div class="send"><input class="field" id="cin" placeholder="Write in English…" autocomplete="off"><button class="btn" id="csend">→</button></div></div>`);
   drawMsgs();$('#csend').onmousedown=e=>e.preventDefault();$('#csend').onclick=send;$('#cin').onkeydown=e=>{if(e.key==='Enter')send()};
   $('#msgs').onclick=async e=>{const t=e.target.closest('.tw');if(!t)return;sfx.click();const tip=$('#tip');tip.hidden=false;tip.textContent='…';clearTimeout(window._tt);window._tt=setTimeout(()=>tip.hidden=true,6000);
@@ -394,12 +440,12 @@ function settings(){const st=syncState==='ok'?'✓ подключено':syncSta
    <b>Общий словарь и ИИ</b><p style="font-size:14px;margin:4px 0">Нужен Cloudflare Worker (см. README). Одинаковый адрес и пароль у тебя и у репетитора.</p>
    <label>Адрес Worker<input class="field" data-set="worker" value="${esc(S.set.worker)}" placeholder="https://….workers.dev"></label>
    <label>Пароль<input class="field" type="password" data-set="pass" value="${esc(S.set.pass)}"></label>
-   <button class="btn w" data-act="sync">Синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-10-20 g</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
+   <button class="btn w" data-act="sync">Синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-10-20 i</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
 
 /* ================= клавиатура и высота окна ================= */
 const vv=window.visualViewport;
-const setVH=()=>document.documentElement.style.setProperty('--vh',(vv?vv.height:innerHeight)+'px');
-setVH();if(vv)vv.addEventListener('resize',setVH);addEventListener('resize',setVH);
+const setVH=()=>{const r=document.documentElement.style;r.setProperty('--vh',(vv?vv.height:innerHeight)+'px');r.setProperty('--vt',(vv?vv.offsetTop:0)+'px')};
+setVH();if(vv){vv.addEventListener('resize',setVH);vv.addEventListener('scroll',setVH)}addEventListener('resize',setVH);
 document.addEventListener('focusin',e=>{if(e.target.matches('input:not([type=checkbox]),textarea')){document.body.classList.add('kb');setVH();setTimeout(()=>{const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight},200)}});
 document.addEventListener('focusout',()=>setTimeout(()=>{const a=document.activeElement;if(!a||!a.matches('input:not([type=checkbox]),textarea'))document.body.classList.remove('kb')},120));
 /* ================= start ================= */
