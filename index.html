@@ -10,13 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
 <script>window.CONFIG={WORKER_URL:"https://tutor.aydar-galeev.workers.dev"}</script>
 <style>
-:root{--y:#F7D84A;--p:#EE8FAE;--l:#C9B3F0;--b:#4EB1EE;--c:#FBF7EE;--k:#1E2233;--g:#8fdc9f;--r:#ee6a62}
+:root{--y:#F7D84A;--p:#EE8FAE;--l:#C9B3F0;--b:#4EB1EE;--c:#FBF7EE;--k:#1E2233;--g:#8fdc9f;--r:#ee6a62;--bg:var(--y);--w:#fff;--l2:var(--l2)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
 body{touch-action:pan-y}
 .body,.def,.ex,#say,.ans,.log,.tip{overflow-wrap:anywhere}
 .m{min-width:0}
-body{font:600 16px/1.35 Manrope,system-ui,sans-serif;color:var(--k);background-color:var(--y);
+body{font:600 16px/1.35 Manrope,system-ui,sans-serif;color:var(--k);background-color:var(--bg);
  background-image:radial-gradient(rgba(30,34,51,.25) 1.5px,transparent 1.7px);background-size:18px 18px;
  padding-bottom:calc(96px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none}
 #app{max-width:520px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 14px 0}
@@ -33,8 +33,8 @@ img{image-rendering:pixelated}
 .dots{display:flex;gap:4px}.dots i{width:12px;height:12px;border:2px solid var(--k);background:var(--c);display:block}
 .body{padding:16px}
 .stage{position:relative;height:256px;background:
- repeating-conic-gradient(var(--l) 0 25%,#d9c9f7 0 50%) 0 0/36px 36px;overflow:hidden}
-.portrait{position:absolute;top:0;left:50%;transform:translateX(-50%) scale(1.45);transform-origin:50% 0;z-index:0}
+ repeating-conic-gradient(var(--l) 0 25%,var(--l2) 0 50%) 0 0/36px 36px;overflow:hidden}
+.portrait{position:absolute;top:0;left:50%;transform:translateX(-50%) translate(var(--dx,0px),var(--dy,0px)) scale(1.45);transform-origin:50% 0;z-index:0}
 .cat{position:absolute;right:8px;bottom:6px;height:70px;z-index:2;animation:bob 2s infinite steps(2)}
 @keyframes bob{50%{transform:translateY(-4px)}}
 .dlg{position:relative;background:var(--c);border:3px solid var(--k);box-shadow:6px 6px 0 var(--k);border-radius:12px;padding:22px 16px 14px;margin:6px 0 18px;min-height:92px}
@@ -63,7 +63,7 @@ img{image-rendering:pixelated}
 .opt.ok,.opt.done{background:var(--g)}.opt.no{background:var(--r);color:#fff}.opt.sel{background:var(--y)}.opt:disabled{opacity:1;cursor:default}
 .shake{animation:sh .3s}@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .mt{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mt .col{display:grid;gap:10px;align-content:start}
-.inp{width:100%;font:800 22px Manrope;border:3px solid var(--k);border-radius:12px;padding:12px;margin-bottom:12px;background:#fff;text-align:center;user-select:text;-webkit-user-select:text}
+.inp{width:100%;font:800 22px Manrope;border:3px solid var(--k);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--w);text-align:center;user-select:text;-webkit-user-select:text}
 .fb{display:flex;align-items:center;gap:10px;background:var(--c);border:3px solid var(--k);box-shadow:4px 4px 0 var(--k);border-radius:12px;padding:8px 10px;margin-bottom:16px}
 .fb #mt{height:56px;border:3px solid var(--k);border-radius:8px;background:var(--l)}.fb #mtx{flex:1;font-weight:700}.gcat{height:44px}
 .ans{background:var(--y);border:3px solid var(--k);border-radius:12px;padding:10px 12px;margin:12px 0;font-weight:800}
@@ -77,7 +77,7 @@ img{image-rendering:pixelated}
 .mn{margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed rgba(30,34,51,.3)}.mn:last-child{border:0}
 .def{font-size:14px;opacity:.75;margin:2px 0}.ex{font-size:15px;margin-top:4px}.ex em{display:block;font-size:13px;opacity:.65;font-style:normal}.ex mark{background:var(--y);border-radius:3px;padding:0 2px}
 .hint{text-align:center;opacity:.6;font-size:13px;margin:0 0 16px}
-textarea,.field{width:100%;font:700 16px Manrope;border:3px solid var(--k);border-radius:12px;padding:10px;background:#fff;color:var(--k);user-select:text;-webkit-user-select:text;margin:6px 0 12px}
+textarea,.field{width:100%;font:700 16px Manrope;border:3px solid var(--k);border-radius:12px;padding:10px;background:var(--w);color:var(--k);user-select:text;-webkit-user-select:text;margin:6px 0 12px}
 code{background:var(--y);border:2px solid var(--k);border-radius:6px;padding:0 5px;font-size:14px}
 .log div{padding:3px 0}
 .wrow{border-bottom:2px dashed rgba(30,34,51,.3);padding:10px 0;cursor:pointer}.wrow:last-child{border:0}
@@ -91,7 +91,7 @@ code{background:var(--y);border:2px solid var(--k);border-radius:6px;padding:0 5
 .msgs{height:calc(var(--vh,100vh) - 310px);min-height:200px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
 .m{display:flex;gap:8px;align-items:flex-end}.m.u{flex-direction:row-reverse}
 .m img{height:44px;width:44px;object-fit:cover;object-position:top;border:3px solid var(--k);border-radius:8px;background:var(--l)}
-.bub{max-width:78%;border:3px solid var(--k);border-radius:12px;padding:8px 12px;background:#fff;user-select:text;-webkit-user-select:text;min-width:0;overflow-wrap:anywhere;word-break:break-word}.m.u .bub{background:var(--b)}
+.bub{max-width:78%;border:3px solid var(--k);border-radius:12px;padding:8px 12px;background:var(--w);user-select:text;-webkit-user-select:text;min-width:0;overflow-wrap:anywhere;word-break:break-word}.m.u .bub{background:var(--b)}
 .tw{border-bottom:2px dotted rgba(30,34,51,.5);cursor:pointer}
 .send{display:flex;gap:8px;padding:10px;border-top:3px solid var(--k)}.send .field{margin:0}
 .tip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(104px + env(safe-area-inset-bottom));background:var(--y);border:3px solid var(--k);box-shadow:3px 3px 0 var(--k);border-radius:10px;padding:5px 12px;font-size:14px;z-index:5;max-width:90%;text-align:center}
@@ -109,9 +109,15 @@ body.kb .tip{bottom:76px}
 .center{text-align:center}
 .check{height:34px;background:repeating-conic-gradient(var(--k) 0 25%,var(--c) 0 50%) 0 0/34px 34px;border:3px solid var(--k);border-radius:8px;margin-bottom:16px}
 #side{display:none}.fabt{display:none}
+body.calm{--bg:#E3DED2;--y:#D9C27E;--p:#D7A0B2;--l:#BDB3DA;--l2:#CFC8E4;--b:#86B0CF;--c:#F7F4EC;--k:#2B3040;--g:#A3C9AA;--r:#D9786F;--w:#FCFAF5;background-image:radial-gradient(rgba(43,48,64,.09) 1.5px,transparent 1.7px)}
+.fileb{display:block;text-align:center;cursor:pointer}.fileb input{display:none}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.thumbs img{height:84px;border:3px solid var(--k);border-radius:8px;background:var(--l);cursor:pointer}.thumbs img.sel{outline:4px solid var(--y)}
+.frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.frames img{width:100%;border:2px solid var(--k);border-radius:6px;background:var(--l)}
+.tcard{display:flex;gap:12px;align-items:center;border:3px solid var(--k);border-radius:12px;box-shadow:4px 4px 0 var(--k);background:var(--w);padding:10px;margin-bottom:12px;cursor:pointer}.tcard img{height:60px;width:60px;object-fit:cover;object-position:top;border:3px solid var(--k);border-radius:8px;background:var(--l)}
+.avatar-s{height:72px;width:72px;object-fit:cover;object-position:top;border:3px solid var(--k);border-radius:10px;background:var(--l)}
 #nav{z-index:60}#nav .bar{background:var(--c);opacity:1;isolation:isolate}
 .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tab{font:800 14px Manrope;border:3px solid var(--k);border-radius:10px;background:var(--c);padding:6px 12px;cursor:pointer;color:var(--k)}.tab.on{background:var(--y);box-shadow:3px 3px 0 var(--k)}
-.scard{border:3px solid var(--k);border-radius:12px;box-shadow:4px 4px 0 var(--k);background:#fff;padding:10px 12px;margin-bottom:12px;cursor:pointer}.scard:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--k)}
+.scard{border:3px solid var(--k);border-radius:12px;box-shadow:4px 4px 0 var(--k);background:var(--w);padding:10px 12px;margin-bottom:12px;cursor:pointer}.scard:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--k)}
 .sh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:18px}.sbar{height:12px;border:2px solid var(--k);background:var(--c);margin:8px 0}.sbar b{display:block;height:100%;background:var(--g)}.sm{font-size:13px;opacity:.85}
 .cards4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.sc{background:var(--c);border:3px solid var(--k);box-shadow:3px 3px 0 var(--k);border-radius:10px;padding:8px 10px}.sc b{font:14px 'Press Start 2P',monospace;display:block;margin-bottom:6px}.sc small{opacity:.75;font-weight:700}
 .gh{font:800 15px Manrope;margin:18px 0 8px}
@@ -169,11 +175,18 @@ const $=s=>document.querySelector(s);
 let S=load();
 function load(){let s={};try{s=JSON.parse(localStorage[LS]||'{}')}catch(e){}
   if(s.chat)s.chat=s.chat.filter(m=>m.t!=='…'&&m.t!=='...');
-  const o=Object.assign({words:[],chat:[],st:{streak:0,last:'',xp:0,days:{}},cur:null,curName:''},s,{set:Object.assign({sound:true,tilt:false,cap:false,worker:(window.CONFIG||{}).WORKER_URL||'',pass:'',tutor:'Tutor',role:'',login:'',who:''},s.set||{})});
-  if(!o.set.role)o.set.role=o.set.pass?'teacher':'student';
+  const o=Object.assign({words:[],chat:[],st:{streak:0,last:'',xp:0,days:{}},cur:null,curName:''},s,{set:Object.assign({sound:true,tilt:false,cap:false,worker:(window.CONFIG||{}).WORKER_URL||'',pass:'',tutor:'Tutor',role:'',login:'',who:'',theme:'bright'},s.set||{})});
+  if(!o.set.role||(!s.rolefix&&o.set.role==='teacher'&&!o.set.login))o.set.role='student';
+  o.rolefix=true;if(o.set.role==='student'){o.cur=null;o.curName=''}
   if(!o.st.days)o.st.days={};return o}
 const isTeacher=()=>S.set.role==='teacher';
 const freshSt=()=>({streak:0,last:'',xp:0,days:{}});
+const TKEY='wordquest.tutor';let TC=null;try{TC=JSON.parse(localStorage[TKEY]||'null')}catch(e){}
+const dflt=n=>A(n);
+function timg(n){const f=(TC&&TC.frames)||{};if(/^(look|tutor)_/.test(n))return f[n]||f.tutor_neutral||(TC&&TC.avatar)||dflt(n);return dflt(n)}
+const tName=()=>(TC&&TC.name)||S.set.tutor;
+const tAvatarOnly=()=>!!(TC&&TC.avatar&&!Object.keys(TC.frames||{}).length);
+function applyTheme(){document.body.classList.toggle('calm',S.set.theme==='calm');const m=document.querySelector('meta[name=theme-color]');if(m)m.content=S.set.theme==='calm'?'#E3DED2':'#F7D84A'}
 function save(push=true){normAll();localStorage[LS]=JSON.stringify(S);if(push)schedulePush();head()}
 const live=()=>S.words.filter(w=>!w.del);
 const ru=w=>((w.m||[]).find(x=>x.ru)||{}).ru||'—';
@@ -205,12 +218,12 @@ function pop(t){const d=document.createElement('div');d.className='pop';d.textCo
 /* ================= tutor (портрет, реплики, взгляд) ================= */
 let curEmo='look',lookIdx=4,sayTok=0;
 const tFile=e=>e==='look'?`look_${lookIdx}`:`tutor_${e}`;
-function setT(e){curEmo=e;document.querySelectorAll('#tutor,.sideTutor').forEach(i=>{i.src=A(tFile(e))})}
+function setT(e){curEmo=e;document.querySelectorAll('#tutor,.sideTutor').forEach(i=>{i.src=timg(tFile(e))})}
 function say(text,emo='look'){const el=$('#say');if(!el)return;const tok=++sayTok;let i=0;el.textContent='';
   const t=setInterval(()=>{if(tok!==sayTok||!el.isConnected){clearInterval(t);return}
     el.textContent=text.slice(0,++i);if(i%3===0)sfx.blip();if(i%5===0)setT((i/5)%2?'talk':'smile');
     if(i>=text.length){clearInterval(t);setT(emo);if(emo!=='look')setTimeout(()=>{if(tok===sayTok)setT('look')},1500)}},26)}
-function setLook(x,y,th){const c=x<-th?0:x>th?2:1,r=y<-th?0:y>th?2:1,k=r*3+c;if(k!==lookIdx){lookIdx=k;if(curEmo==='look')setT('look')}}
+function setLook(x,y,th){const c=x<-th?0:x>th?2:1,r=y<-th?0:y>th?2:1,k=r*3+c;if(k!==lookIdx){lookIdx=k;if(curEmo==='look')setT('look');const av=tAvatarOnly(),sty=document.documentElement.style;sty.setProperty('--dx',av?((k%3)-1)*7+'px':'0px');sty.setProperty('--dy',av?((k/3|0)-1)*5+'px':'0px')}}
 addEventListener('pointermove',e=>{const T=$('#tutor')||[...document.querySelectorAll('.sideTutor')].find(i=>i.offsetParent);if(!T)return;const b=T.getBoundingClientRect();setLook((e.clientX-(b.left+b.width/2))/innerWidth*2,(e.clientY-(b.top+b.height*.4))/innerHeight*2,.18)});
 addEventListener('deviceorientation',e=>{const s=$('#sens');if(s)s.textContent=e.gamma==null?'нет данных':`наклон: ${Math.round(e.gamma)}° / ${Math.round((e.beta||0)-45)}°`;if(!S.set.tilt||e.gamma==null)return;setLook(-e.gamma,-((e.beta||0)-45),9)});
 async function enableTilt(){
@@ -231,22 +244,24 @@ function pickSession(n){const now=Date.now(),all=live();
   return shuffle(due)}
 
 /* ================= sync (Cloudflare Worker) ================= */
-const canSync=()=>S.set.worker&&S.set.pass&&(isTeacher()||S.set.login);
+const canSync=()=>S.set.worker&&S.set.pass;
 let syncState='',aiErr='',syncErr='';
 async function api(task,body={},ms=45000){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),ms);let r;
-  try{r=await fetch(S.set.worker,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({task,role:S.set.role||'teacher',login:S.set.login,pass:S.set.pass,sid:isTeacher()?S.cur:undefined,...body}),signal:ac.signal})}
+  try{r=await fetch(S.set.worker,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({task,role:(isTeacher()||!S.set.login)?'teacher':'student',login:S.set.login,pass:S.set.pass,sid:isTeacher()?S.cur:undefined,...body}),signal:ac.signal})}
   catch(e){throw new Error(e.name==='AbortError'?'ИИ не ответил за '+ms/1000+' с (слишком долго)':'нет связи с Worker: '+e.message)}finally{clearTimeout(tm)}
-  const d=await r.json().catch(()=>({}));if(!r.ok||d.error)throw new Error(d.error||('HTTP '+r.status));return d}
+  const d=await r.json().catch(()=>({}));if(d.error==='unknown task')throw new Error('Worker устарел: вставь новый worker.js в Cloudflare (Worker → Edit code → вставить → Deploy)');if(!r.ok||d.error)throw new Error(d.error||('HTTP '+r.status));return d}
 function merge(remote){const m=new Map(S.words.map(w=>[w.id,w]));
   remote.forEach(r=>{const l=m.get(r.id);if(!l||(r.u||0)>(l.u||0))m.set(r.id,r)});S.words=[...m.values()]}
 function mergeProf(r){if(!r)return;S.st.xp=Math.max(S.st.xp||0,r.xp||0);if((r.streak||0)>(S.st.streak||0)){S.st.streak=r.streak;S.st.last=r.last||S.st.last}
   S.st.days=S.st.days||{};Object.entries(r.days||{}).forEach(([k,v])=>{const l=S.st.days[k]||{ok:0,bad:0};S.st.days[k]={ok:Math.max(l.ok||0,v.ok||0),bad:Math.max(l.bad||0,v.bad||0)}})}
+function applyStash(){if(!(S.stash&&S.stash.length&&!isTeacher()&&S.set.login))return;const n=S.stash.length;
+  if(confirm('На этом устройстве остались слова из старого режима ('+n+'). Добавить их в твой аккаунт?')){merge(S.stash);S.stash=null;save(false)}else S.stash=null}
 let pt;function schedulePush(){clearTimeout(pt);if(canSync())pt=setTimeout(push,isTeacher()?2000:15000)}
 function flushPush(){clearTimeout(pt);return push()}
 async function pull(){if(!canSync())return;try{
   if(isTeacher()&&!S.cur){await api('whoami');syncState='ok';return}
-  const d=await api('deck_get');merge(d.words||[]);if(d.prof&&d.prof.st)mergeProf(d.prof.st);if(d.name)S.set.who=d.name;save(false);syncState='ok'}catch(e){syncState='err';syncErr=String(e.message||e)}}
-async function push(){if(!canSync()||(isTeacher()&&!S.cur))return;try{const d=await api('deck_get');merge(d.words||[]);if(d.prof&&d.prof.st)mergeProf(d.prof.st);
+  const d=await api('deck_get');merge(d.words||[]);if(d.prof&&d.prof.st)mergeProf(d.prof.st);if(d.name)S.set.who=d.name;applyStash();save(false);syncState='ok';if(!isTeacher()&&S.set.login)await loadAssets()}catch(e){syncState='err';syncErr=String(e.message||e)}}
+async function push(){if(!canSync()||(isTeacher()&&!S.cur))return;try{const d=await api('deck_get');merge(d.words||[]);if(d.prof&&d.prof.st)mergeProf(d.prof.st);applyStash();
   await api('deck_put',{words:S.words,st:isTeacher()?undefined:S.st});localStorage[LS]=JSON.stringify(S);syncState='ok'}catch(e){syncState='err';syncErr=String(e.message||e)}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)flushPush();else pull().then(()=>{head();if($('#tutor')&&!isTeacher())home()})});
 
@@ -296,15 +311,15 @@ document.addEventListener('click',e=>{
   if(a==='edit'){sfx.click();editWord(t.dataset.id)}
   if(a==='redoall'){reenrich(live().filter(needFix),$('#redoout'))}
   if(a==='testai'){const o=$('#aitest');o.textContent='…';api('chat',{msgs:[{r:'u',t:'Say hi in five words.'}],words:[]}).then(d=>o.innerHTML=px('check',14)+' ИИ отвечает: '+esc(d.reply)).catch(e=>o.innerHTML=px('cross',14)+' '+esc(String(e.message||e).slice(0,300)))}
-  if(a==='sync'){syncState='…';settings();(isTeacher()&&!S.cur?pull():push()).then(()=>settings())}
+  if(a==='sync'){syncState='…';syncErr='';settings();api('whoami').then(d=>{if(!d.v||d.v<3)throw new Error('Worker устарел: вставь новый worker.js в Cloudflare (Worker → Edit code → вставить → Deploy)');if(d.name&&!isTeacher())S.set.who=d.name;return isTeacher()&&!S.cur?pull():push()}).then(()=>{if(syncState!=='err')syncState='ok';if(!isTeacher()&&S.set.login&&syncState==='ok')return loadAssets(true)}).catch(e=>{syncState='err';syncErr=String(e.message||e)}).then(()=>settings())}
 });
-document.addEventListener('change',e=>{const k=e.target.dataset.set;if(!k)return;const old=S.set[k];S.set[k]=e.target.type==='checkbox'?e.target.checked:e.target.value.trim();save(false);if(k==='login'&&old!==S.set.login){S.words=[];S.chat=[];S.st=freshSt();S.set.who='';save(false)}if(k==='sound'&&S.set.sound)sfx.click();if(k==='tutor'&&$('#sideName'))$('#sideName').textContent=S.set.tutor+'.exe'});
+document.addEventListener('change',e=>{const k=e.target.dataset.set;if(!k)return;const old=S.set[k];S.set[k]=e.target.type==='checkbox'?e.target.checked:e.target.value.trim();save(false);if(k==='login'&&old!==S.set.login){const keep=S.words.filter(w=>!w.del);if(!old&&keep.length)S.stash=keep;S.words=[];S.chat=[];S.st=freshSt();S.set.who='';TC=null;localStorage.removeItem(TKEY);save(false)}if(k==='sound'&&S.set.sound)sfx.click();if(k==='tutor'&&$('#sideName'))$('#sideName').textContent=tName()+'.exe'});
 
 /* ================= HOME ================= */
 function home(){const L=live(),due=L.filter(w=>(w.due||0)<=Date.now()).length;
-  view(`<div class="win"><div class="tb"><span>${esc(S.set.tutor)}.exe</span><span class="dots"><i></i><i></i><i></i></span></div>
-   <div class="stage"><img id="tutor" class="portrait" src="${A('look_'+lookIdx)}" alt=""><img class="cat" src="${A(due?'cat_idle':'cat_sleep')}" alt=""></div></div>
-   <div class="dlg"><div class="nm">${esc(S.set.tutor)}</div><div id="say"></div></div>
+  view(`<div class="win"><div class="tb"><span>${esc(tName())}.exe</span><span class="dots"><i></i><i></i><i></i></span></div>
+   <div class="stage"><img id="tutor" class="portrait" src="${timg('look_'+lookIdx)}" alt=""><img class="cat" src="${A(due?'cat_idle':'cat_sleep')}" alt=""></div></div>
+   <div class="dlg"><div class="nm">${esc(tName())}</div><div id="say"></div></div>
    <div class="row"><button class="btn big" data-go="game">${px('play',18)} Играть</button><button class="btn big pink" data-go="cards">Карточки</button></div>
    <div class="note">${ic('book',20)} На повторение сегодня: <b>${due}</b> из ${L.length}</div>`);
   curEmo='look';
@@ -363,8 +378,8 @@ function q(){if(G.i>=G.items.length)return finish('game',G.ok,G.ok+G.bad);
   const it=G.items[G.i];if(it.t==='fill'&&!blankOf(it.w))it.t='choose';
   ({choose:qChoose,fill:qFill,type:qType,match:qMatch})[it.t](it)}
 function frame(inner){return`<div class="win"><div class="tb lc"><span>game.exe</span><span>${Math.min(G.i+1,G.items.length)}/${G.items.length}</span></div><div class="prog"><b style="width:${G.i/G.items.length*100}%"></b></div><div class="body">${inner}</div></div>
-  <div class="fb"><img id="mt" src="${A('tutor_neutral')}" alt=""><div id="mtx">Погнали!</div><img id="gc" class="gcat" src="${A('cat_idle')}" alt=""></div>`}
-function fb(emo,txt,cat){$('#mt').src=A('tutor_'+emo);$('#mtx').textContent=txt;$('#gc').src=A('cat_'+cat)}
+  <div class="fb"><img id="mt" src="${timg('tutor_neutral')}" alt=""><div id="mtx">Погнали!</div><img id="gc" class="gcat" src="${A('cat_idle')}" alt=""></div>`}
+function fb(emo,txt,cat){$('#mt').src=timg('tutor_'+emo);$('#mtx').textContent=txt;$('#gc').src=A('cat_'+cat)}
 function res(w,ok,it){answer(w,ok);setT(ok?'smile':'think');clearTimeout(window._rt);window._rt=setTimeout(()=>setT('look'),1600);
   if(ok){G.ok++;G.combo++;sfx.good();pop('+10');fb(G.combo>=3?'wow':pick(['smile','wink']),G.combo>=3?pick(LINES.combo):pick(LINES.good),G.combo>=3?'cheer':'happy')}
   else{G.bad++;G.combo=0;sfx.bad();fb('think',pick(LINES.bad),'sad');if(!it.re&&it.t!=='match')G.items.push({...it,re:true})}}
@@ -496,12 +511,12 @@ async function addFromChat(word,sent,d){const tip=$('#tip');clearTimeout(window.
   const s2=String(sent).trim();if(s2&&s2.length<220)g.m[0].ex=[{en:s2,ru:d.sentence_ru||''},...(g.m[0].ex||[])].slice(0,3);
   S.words.push({id:uid(),w:base,ipa:g.ipa||'',m:g.m,box:0,due:0,seen:0,ok:0,bad:0,u:Date.now()});save();sfx.good();
   tip.innerHTML=px('check',14)+' добавлено: <b>'+esc(base)+'</b>';window._tt=setTimeout(()=>tip.hidden=true,2500)}
-function drawMsgs(){const m=$('#msgs');if(!m)return;m.innerHTML=S.chat.slice(-40).map(x=>`<div class="m ${x.r==='u'?'u':''}"><img src="${A(x.r==='u'?'me_happy':'look_4')}" alt=""><div class="bub">${x.r==='a'?wrapWords(x.t):esc(x.t)}</div></div>`).join('');m.scrollTop=m.scrollHeight}
+function drawMsgs(){const m=$('#msgs');if(!m)return;m.innerHTML=S.chat.slice(-40).map(x=>`<div class="m ${x.r==='u'?'u':''}"><img src="${x.r==='u'?((S.me&&S.me.avatar)||dflt('me_happy')):timg('look_4')}" alt=""><div class="bub">${x.r==='a'?wrapWords(x.t):esc(x.t)}</div></div>`).join('');m.scrollTop=m.scrollHeight}
 async function send(){const inp=$('#cin'),t=inp.value.trim();if(!t)return;inp.value='';sfx.click();S.chat.push({r:'u',t});drawMsgs();
   if(!canSync()){S.chat.push({r:'a',t:'Connect the Worker in Settings, and I can answer you!'});save(false);drawMsgs();return}
   S.chat.push({r:'a',t:'…'});drawMsgs();
   try{const ws=[...live()].sort((a,b)=>((b.bad||0)-(a.bad||0))||((a.box||0)-(b.box||0))||(Math.random()-.5)).slice(0,10).map(w=>w.w);
-    const d=await api('chat',{msgs:S.chat.slice(0,-1).slice(-12).map(x=>({r:x.r,t:x.t})),words:ws,tutor:S.set.tutor});S.chat[S.chat.length-1].t=d.reply}
+    const d=await api('chat',{msgs:S.chat.slice(0,-1).slice(-12).map(x=>({r:x.r,t:x.t})),words:ws,tutor:tName()});S.chat[S.chat.length-1].t=d.reply}
   catch(e){S.chat[S.chat.length-1].t='Oops: '+String(e.message||e).slice(0,300)}
   save(false);drawMsgs()}
 
@@ -510,17 +525,20 @@ function settings(){const T=isTeacher();
   const st=syncState==='ok'?px('check',14)+' подключено'+(!T&&S.set.who?': '+esc(S.set.who):''):syncState==='err'?px('cross',14)+' '+esc(syncErr||'ошибка'):syncState==='…'?'…':canSync()?'не проверено':'выключено (данные только на этом устройстве)';
   view(`<div class="win"><div class="tb"><span>settings.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body">
    <label class="set"><span>Звуки</span><input type="checkbox" data-set="sound" ${S.set.sound?'checked':''}></label>
+   <div class="set"><span>Тема</span><div style="display:flex;gap:6px"><button class="btn ${S.set.theme==='calm'?'lilac':''}" data-act="theme" data-v="bright">Яркая</button><button class="btn ${S.set.theme==='calm'?'':'lilac'}" data-act="theme" data-v="calm">Спокойная</button></div></div>
    <div class="set"><span>Наклон телефона (взгляд)</span><button class="btn" data-act="tilt">${S.set.tilt?'включён':'Включить'}</button></div><p id="sens" style="font-size:13px;margin:0 0 8px;opacity:.7">датчик: жду…</p>
    <label class="set"><span>Слова с большой буквы</span><input type="checkbox" data-set="cap" ${S.set.cap?'checked':''}></label>
-   <label>Имя репетитора<input class="field" data-set="tutor" value="${esc(S.set.tutor)}"></label>
+   ${TC&&!isTeacher()?'':`<label>Имя репетитора<input class="field" data-set="tutor" value="${esc(S.set.tutor)}"></label>`}
+   ${T?'':`<hr style="border:0;border-top:3px dashed var(--k);margin:12px 0"><b>Мой профиль</b><div style="display:flex;gap:12px;align-items:center;margin:8px 0"><img class="avatar-s" src="${(S.me&&S.me.avatar)||dflt('me_happy')}" alt=""><div style="flex:1"><label class="btn lilac fileb" style="padding:8px">Выбрать фото<input type="file" id="me_photo" accept="image/*"></label>${S.me&&S.me.avatar?'<button class="del" data-act="mephotodel" style="margin-top:6px">Убрать фото</button>':''}</div></div><label>Моё имя<input class="field" id="me_name" value="${esc((S.me&&S.me.name)||S.set.who||'')}"></label>`}
    <hr style="border:0;border-top:3px dashed var(--k);margin:12px 0">
    <b>Аккаунт</b>
    <div class="row" style="margin:8px 0"><button class="btn ${T?'lilac':''}" data-act="role" data-v="student">Я ученик</button><button class="btn ${T?'':'lilac'}" data-act="role" data-v="teacher">Я учитель</button></div>
-   <p style="font-size:14px;margin:4px 0">${T?'Пароль учителя задан в Cloudflare (секрет PASS). Учеников создаёшь на вкладке «Ученики».':'Логин и пароль тебе выдал учитель.'}</p>
-   <label>Адрес Worker<input class="field" data-set="worker" value="${esc(S.set.worker)}" placeholder="https://….workers.dev"></label>
-   ${T?'':`<label>Логин<input class="field" data-set="login" autocapitalize="off" value="${esc(S.set.login)}"></label>`}
-   <label>${T?'Пароль учителя':'Пароль'}<input class="field" type="password" data-set="pass" value="${esc(S.set.pass)}"></label>
-   <button class="btn w" data-act="sync">Войти и синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-11-12 k</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
+   <p style="font-size:14px;margin:4px 0">${T?'Пароль учителя задан в Cloudflare (секрет PASS). Учеников создаёшь на вкладке «Ученики».':(!S.set.login&&S.set.pass?'Сейчас включён старый общий режим (общий словарь). Чтобы заниматься под личным аккаунтом, попроси учителя создать логин и введи его здесь.':'Логин и пароль тебе выдал учитель.')}</p>
+   <label>Адрес Worker<input class="field" data-set="worker" name="wq_worker" autocomplete="off" data-lpignore="true" data-1p-ignore value="${esc(S.set.worker)}" placeholder="https://….workers.dev"></label>
+   ${T?'':`<label>Логин<input class="field" data-set="login" name="wq_login" autocomplete="username" autocapitalize="off" value="${esc(S.set.login)}"></label>`}
+   <label>${T?'Пароль учителя':'Пароль'}<input class="field" type="password" data-set="pass" name="wq_pass" autocomplete="current-password" value="${esc(S.set.pass)}"></label>
+   <button class="btn w" data-act="sync">Войти и синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-11-13 n</p><p style="font-size:14px">Статус: ${st}</p></div></div>`);
+  settingsHandlers()}
 
 /* ================= клавиатура и высота окна ================= */
 const vv=window.visualViewport;
@@ -546,22 +564,30 @@ function buildNav(){const t=isTeacher();
    `<button class="nb" data-go="students">${ic('pc',26)}<span>Ученики</span></button><div class="fab" data-go="add" title="Добавить слова"><img src="${A('pencil')}" alt="" style="width:38px;height:38px;object-fit:contain;image-rendering:pixelated"><span class="fabt">Добавить слова</span></div><button class="nb" data-go="settings">${ic('floppy',26)}<span>Настройки</span></button>`:
    `<button class="nb" data-go="home">${ic('pc',26)}<span>Главная</span></button><button class="nb" data-go="words">${ic('book',26)}<span>Слова</span></button><div class="fab" data-go="add" title="Добавить слова"><img src="${A('pencil')}" alt="" style="width:38px;height:38px;object-fit:contain;image-rendering:pixelated"><span class="fabt">Добавить слова</span></div><button class="nb" data-go="chat">${ic('bubble',26)}<span>Чат</span></button><button class="nb" data-go="settings">${ic('floppy',26)}<span>Настройки</span></button>`)+'</div>'}
 async function students(){
-  view(`<div class="win"><div class="tb"><span>students.exe</span><span id="scount"></span></div><div class="body"><button class="btn w" data-act="newstu">+ Новый ученик</button><div id="slist" style="margin-top:12px">${loadBox}</div></div></div>`);
+  view(`<div class="win"><div class="tb"><span>students.exe</span><span id="scount"></span></div><div class="body"><div class="tabs"><button class="tab on">Ученики</button><button class="tab" data-act="tutors">Репетиторы</button></div><button class="btn w" data-act="newstu">+ Новый ученик</button><div id="slist" style="margin-top:12px">${loadBox}</div></div></div>`);
   if(!canSync()){$('#slist').innerHTML=errBox('Введи адрес Worker и пароль учителя в «Настройках».');return}
-  try{const d=await api('students_list');TD.list=d.students||[];syncState='ok'}catch(e){$('#slist').innerHTML=errBox(String(e.message||e));return}
+  try{const d=await api('students_list');TD.list=d.students||[];TD.legacy=d.legacy||0;syncState='ok'}catch(e){$('#slist').innerHTML=errBox(String(e.message||e));return}
   drawStudents()}
 function drawStudents(){const el=$('#slist');if(!el)return;$('#scount').textContent=TD.list.length;
-  el.innerHTML=TD.list.length?TD.list.map(s=>{const acc=s.ok+s.bad?Math.round(s.ok/(s.ok+s.bad)*100):0,pct=s.words?Math.round(s.mastered/s.words*100):0;
-    return `<div class="scard" data-act="openstu" data-id="${s.id}"><div class="sh"><b>${esc(s.name)}</b><span class="ipa">${esc(s.login)}</span></div><div class="sbar"><b style="width:${pct}%"></b></div><div class="sm">слов: <b>${s.words}</b> · выучено: <b>${s.mastered}</b> · на повтор: <b>${s.due}</b> · точность: <b>${acc}%</b><br>был: ${ago(s.last)}</div></div>`}).join(''):'<p class="center">Пока нет учеников. Создай первого кнопкой выше.</p>'}
-function newStudentForm(){
+  const note=TD.legacy?`<div class="note">Старый общий словарь: <b>${TD.legacy}</b> слов. Передать его ученику: при создании ученика (галочка) или во вкладке «Доступ».</div>`:'';
+  el.innerHTML=note+(TD.list.length?TD.list.map(s=>{const acc=s.ok+s.bad?Math.round(s.ok/(s.ok+s.bad)*100):0,pct=s.words?Math.round(s.mastered/s.words*100):0;
+    return `<div class="scard" data-act="openstu" data-id="${s.id}"><div class="sh"><b>${esc(s.name)}</b><span class="ipa">${esc(s.login)}</span></div><div class="sbar"><b style="width:${pct}%"></b></div><div class="sm">слов: <b>${s.words}</b> · выучено: <b>${s.mastered}</b> · на повтор: <b>${s.due}</b> · точность: <b>${acc}%</b><br>был: ${ago(s.last)}</div></div>`}).join(''):'<p class="center">Пока нет учеников. Создай первого кнопкой выше.</p>')}
+const translit=t=>{const m={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'c',ч:'ch',ш:'sh',щ:'sch',ы:'y',э:'e',ю:'yu',я:'ya'};return String(t).toLowerCase().split('').map(c=>m[c]!==undefined?m[c]:c).join('').replace(/[^a-z0-9._-]/g,'').slice(0,24)};
+function newStudentForm(){const ro='readonly onfocus="this.removeAttribute(\'readonly\')" autocomplete="off" data-lpignore="true" data-1p-ignore';
   view(`<div class="win"><div class="tb pk"><span>new_student.exe</span><button class="rst" data-act="stuback">назад</button></div><div class="body">
-   <label>Имя ученика<input class="field" id="ns_name" placeholder="Например, Айдар" style="margin-top:4px"></label>
-   <label>Логин (латиницей)<input class="field" id="ns_login" autocapitalize="off" placeholder="aydar" style="margin-top:4px"></label>
-   <label>Пароль<input class="field" id="ns_pass" value="${genPass()}" style="margin-top:4px"></label>
+   <label>Имя ученика<input class="field" id="ns_name" name="ns-nm" placeholder="Например, Айдар" style="margin-top:4px" ${ro}></label>
+   <label>Логин (латиницей)<input class="field" id="ns_login" name="ns-lg" autocapitalize="off" placeholder="aydar" style="margin-top:4px" ${ro}></label>
+   <label>Пароль<input class="field" id="ns_pass" name="ns-pw" value="${genPass()}" style="margin-top:4px" ${ro}></label>
+   <label>Репетитор<select id="ns_tut" class="field" style="margin-top:4px"><option value="">Стандартный</option></select></label>
+   <label class="set" style="margin-bottom:6px"><span>Перенести старый общий словарь этому ученику (если он есть)</span><input type="checkbox" id="ns_imp" checked></label>
    <button class="btn w" id="ns_go">Создать ученика</button><div id="ns_out" style="margin-top:12px"></div></div></div>`);
-  $('#ns_go').onclick=async()=>{const name=$('#ns_name').value.trim(),login=$('#ns_login').value.trim(),spass=$('#ns_pass').value;const out=$('#ns_out');out.textContent='…';
-    try{await api('student_create',{name,login,spass});const site=location.origin+location.pathname;
-      out.innerHTML=`<div class="ans">Ученик создан. Передай ему:<br>Сайт: ${esc(site)}<br>Логин: <b>${esc(login.toLowerCase())}</b><br>Пароль: <b>${esc(spass)}</b><br><small>Пароль потом не показывается, его можно только сменить.</small></div><button class="btn w" id="ns_copy">Скопировать</button><button class="btn w pink" data-act="stuback" style="margin-top:8px">К ученикам</button>`;
+  api('tutors_list').then(d=>{const el=$('#ns_tut');if(el)el.innerHTML+=(d.tutors||[]).map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('')}).catch(()=>{});
+  let manual=false;$('#ns_login').oninput=()=>{manual=true};$('#ns_name').oninput=()=>{if(!manual)$('#ns_login').value=translit($('#ns_name').value)};
+  $('#ns_go').onclick=async()=>{const name=$('#ns_name').value.trim(),login=$('#ns_login').value.trim(),spass=$('#ns_pass').value,imp=$('#ns_imp').checked;const out=$('#ns_out');out.textContent='…';
+    try{const c=await api('student_create',{name,login,spass});let moved='';const tid=$('#ns_tut').value;if(tid)await api('student_update',{sid:c.id,tutorId:tid});
+      if(imp){try{const m=await api('import_legacy',{sid:c.id});moved=`<br>Перенесено слов из старого словаря: <b>${m.count}</b>`}catch(e){moved=''}}
+      const site=location.origin+location.pathname;
+      out.innerHTML=`<div class="ans">Ученик создан. Передай ему:<br>Сайт: ${esc(site)}<br>Логин: <b>${esc(login.toLowerCase())}</b><br>Пароль: <b>${esc(spass)}</b>${moved}<br><small>Пароль потом не показывается, его можно только сменить.</small></div><button class="btn w" id="ns_copy">Скопировать</button><button class="btn w pink" data-act="stuback" style="margin-top:8px">К ученикам</button>`;
       $('#ns_copy').onclick=()=>{try{navigator.clipboard.writeText(`Сайт: ${site}\nЛогин: ${login.toLowerCase()}\nПароль: ${spass}`)}catch(e){}$('#ns_copy').textContent='Скопировано'}}
     catch(e){out.innerHTML=errBox(String(e.message||e))}}}
 async function openStudent(id){view(`<div class="win"><div class="tb pk"><span>student.exe</span></div><div class="body">${loadBox}</div></div>`);
@@ -607,10 +633,19 @@ function tabAcc(b){const s=TD.data.student;
   b.innerHTML=`<p style="margin-top:0">Логин: <b>${esc(s.login)}</b></p>
    <label>Имя<input class="field" id="ac_name" value="${esc(s.name)}" style="margin-top:4px"></label><button class="btn w" data-act="stusave">Сохранить имя</button>
    <label style="display:block;margin-top:14px">Новый пароль (минимум 4 символа)<input class="field" id="ac_pass" style="margin-top:4px"></label><button class="btn w lilac" data-act="stupass">Сменить пароль</button>
+   <label style="display:block;margin-top:14px">Репетитор ученика<select id="ac_tut" class="field" style="margin-top:4px"><option value="">Стандартный</option></select></label><button class="btn w lilac" data-act="stutor">Назначить репетитора</button>
    <button class="btn w" data-act="stuimport" style="margin-top:14px">Передать ему старый общий словарь</button>
-   <button class="del" data-act="studel" style="margin-top:14px;padding:8px 14px;font-size:15px">Удалить ученика</button><div id="acout" style="margin-top:10px"></div>`}
+   <button class="del" data-act="studel" style="margin-top:14px;padding:8px 14px;font-size:15px">Удалить ученика</button><div id="acout" style="margin-top:10px"></div>`;
+  api('tutors_list').then(d=>{const sel=$('#ac_tut');if(!sel)return;sel.innerHTML='<option value="">Стандартный</option>'+(d.tutors||[]).map(t=>`<option value="${t.id}" ${t.id===s.tutorId?'selected':''}>${esc(t.name)}</option>`).join('')}).catch(()=>{})}
 function teacherAct(a,t){
   const out=m=>{const o=$('#acout')||$('#sumout');if(o)o.innerHTML=m};
+  if(a==='theme'){S.set.theme=t.dataset.v;save(false);applyTheme();settings();return true}
+  if(a==='mephotodel'){S.me=S.me||{};S.me.avatar='';save(false);if(canSync()&&S.set.login)api('me_put',{avatar:''}).catch(()=>{});settings();return true}
+  if(a==='tutors'||a==='tutback'){tutors();return true}
+  if(a==='newtut'){tutorEditor();return true}
+  if(a==='edittut'){tutorEditor(t.dataset.id);return true}
+  if(a==='deltut'){if(confirm('Удалить репетитора? Ученики с ним получат стандартного персонажа.'))api('tutor_delete',{tid:t.dataset.id}).then(()=>tutors()).catch(e=>alert(e.message));return true}
+  if(a==='stutor'){const v=$('#ac_tut').value;api('student_update',{sid:S.cur,tutorId:v}).then(()=>{TD.data.student.tutorId=v;out(px('check',14)+' репетитор назначен')}).catch(e=>out(errBox(e.message)));return true}
   if(a==='newstu'){newStudentForm();return true}
   if(a==='openstu'){openStudent(t.dataset.id);return true}
   if(a==='stuback'){students();return true}
@@ -624,8 +659,75 @@ function teacherAct(a,t){
   if(a==='role'){const v=t.dataset.v;if(v===S.set.role)return true;
     if(confirm('Сменить роль? Данные на этом устройстве (слова, чат) очистятся. На сервере всё сохранится.')){S.set.role=v;S.set.pass='';S.set.login='';S.set.who='';S.words=[];S.chat=[];S.cur=null;S.curName='';S.st=freshSt();TD.data=null;syncState='';save(false);buildNav();settings()}return true}
   return false}
+/* ================= персонажи: фото, листы, репетиторы ================= */
+const loadImg=f=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(f)});
+async function pixelAvatar(file,n=44,out=176){const im=await loadImg(file);const m=Math.min(im.width,im.height),sx=(im.width-m)/2,sy=(im.height-m)/2*.55;
+  const c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingQuality='high';x.drawImage(im,sx,sy,m,m,0,0,n,n);
+  const d=x.getImageData(0,0,n,n),p=d.data;for(let i=0;i<p.length;i+=4)for(let k=0;k<3;k++)p[i+k]=Math.min(255,Math.round(p[i+k]/42)*42);
+  x.putImageData(d,0,0);const o=document.createElement('canvas');o.width=o.height=out;const y=o.getContext('2d');y.imageSmoothingEnabled=false;y.drawImage(c,0,0,out,out);return o.toDataURL('image/png')}
+const EMO_NAMES=['tutor_neutral','tutor_talk','tutor_smile','tutor_think','tutor_wow','tutor_wink'],LOOK_NAMES=[0,1,2,3,4,5,6,7,8].map(i=>'look_'+i);
+async function sliceSheet(file,cols,rows,names){const im=await loadImg(file);const sc=Math.min(1,1600/Math.max(im.width,im.height)),W=Math.round(im.width*sc),H=Math.round(im.height*sc);
+  const canv=document.createElement('canvas');canv.width=W;canv.height=H;const x=canv.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,W,H);
+  const d=x.getImageData(0,0,W,H),p=d.data;
+  let keyed=0;for(let i=0;i<p.length;i+=4){const r=p[i],g=p[i+1],b=p[i+2],gr=g-Math.max(r,b);if(gr>=90){p[i+3]=0;keyed++}else{p[i+3]=255;if(gr>0)p[i+1]=Math.max(r,b)}}
+  if(keyed/(W*H)<.2)throw new Error('Это не похоже на лист с зелёным фоном. Фон должен быть ярко-зелёным (#00FF00), персонажи отдельно друг от друга.');
+  x.putImageData(d,0,0);
+  const cw=Math.floor(W/cols),ch=Math.floor(H/rows),cells=[];
+  for(let r=0;r<rows;r++)for(let q=0;q<cols;q++){const a=x.getImageData(q*cw,r*ch,cw,ch).data;let x0=cw,y0=ch,x1=-1,y1=-1;
+    for(let yy=0;yy<ch;yy++)for(let xx=0;xx<cw;xx++)if(a[(yy*cw+xx)*4+3]>0){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(yy<y0)y0=yy;if(yy>y1)y1=yy}
+    cells.push({q,r,x0,y0,x1,y1,empty:x1<0})}
+  const ok=cells.filter(c=>!c.empty);if(ok.length<cols*rows*.6)throw new Error('Не нашла персонажей на зелёном фоне. Фон должен быть ярко-зелёным (#00FF00), и в листе должно быть '+cols+'×'+rows+' картинок.');
+  const CW=Math.max(...ok.map(c=>c.x1-c.x0+1)),CH=Math.max(...ok.map(c=>c.y1-c.y0+1)),k=172/CW,OW=Math.round(CW*k),OH=Math.round(CH*k),out={};
+  cells.forEach((c,i)=>{if(c.empty)return;const bw=c.x1-c.x0+1,bh=c.y1-c.y0+1;
+    const t=document.createElement('canvas');t.width=CW;t.height=CH;t.getContext('2d').drawImage(canv,c.q*cw+c.x0,c.r*ch+c.y0,bw,bh,Math.floor((CW-bw)/2),0,bw,bh);
+    const o=document.createElement('canvas');o.width=OW;o.height=OH;const ox=o.getContext('2d',{willReadFrequently:true});ox.imageSmoothingQuality='high';ox.drawImage(t,0,0,OW,OH);
+    const od=ox.getImageData(0,0,OW,OH),pp=od.data;for(let j=3;j<pp.length;j+=4)pp[j]=pp[j]>128?255:0;ox.putImageData(od,0,0);out[names[i]]=o.toDataURL('image/png')});
+  return out}
+const GEN_STYLE='STYLE: chunky pixel art, thick dark navy outlines, flat colors, no gradients, no anti-aliasing, hard pixel edges. Retro-wave neo-brutalist look. Background: one flat solid pure green #00FF00, no shadows or textures on it. Every sprite fully separated by a clear gap. No text.';
+const PROMPTS={p1:'Turn the person from the attached photo(s) into a pixel-art character portrait. Make a sprite sheet: 3 columns x 2 rows, equal square cells, head and shoulders, front view, identical hairstyle, clothes and proportions in every cell. Expressions: 1) neutral, mouth closed 2) talking, mouth open 3) big smile 4) thinking, eyes looking up 5) surprised 6) proud, winking. '+GEN_STYLE,
+ p2:'Same character as in the attached image, exactly the same hairstyle, outfit and style. New sprite sheet: 3 columns x 3 rows, equal square cells, head and shoulders, same head size and position in every cell, gentle smile. The head AND eyes turn in the direction: row 1: up-left, up, up-right; row 2: left, straight at camera, right; row 3: down-left, down, down-right. '+GEN_STYLE};
+async function loadAssets(force){if(!canSync()||isTeacher()||!S.set.login)return;
+  try{const d=await api('assets_get',{tid:force?undefined:(TC&&TC.id),tv:force?undefined:(TC&&TC.v)});
+    if(d.me){S.me=S.me||{};if(d.me.name)S.me.name=d.me.name;S.me.avatar=d.me.avatar||''}
+    if(!d.tutor){TC=null;localStorage.removeItem(TKEY)}
+    else if(d.tutor.same&&TC&&TC.id===d.tutor.id){TC.name=d.tutor.name}
+    else{TC={id:d.tutor.id,v:d.tutor.v,name:d.tutor.name,avatar:d.tutor.avatar,frames:d.tutor.frames||{}}}
+    if(TC)try{localStorage[TKEY]=JSON.stringify(TC)}catch(e){}
+    save(false);setT('look');if($('#msgs'))drawMsgs()}catch(e){}}
+function settingsHandlers(){if(isTeacher())return;
+  const ph=$('#me_photo');if(ph)ph.onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const u=await pixelAvatar(f,44,128);S.me=S.me||{};S.me.avatar=u;save(false);if(canSync()&&S.set.login)await api('me_put',{avatar:u}).catch(()=>{});settings()}catch(err){alert('Не получилось обработать фото')}};
+  const nm=$('#me_name');if(nm)nm.onchange=()=>{S.me=S.me||{};S.me.name=nm.value.trim();save(false);if(canSync()&&S.set.login)api('me_put',{name:S.me.name}).catch(()=>{})}}
+let TL=[];
+async function tutors(){
+  view(`<div class="win"><div class="tb"><span>tutors.exe</span><span id="tcount"></span></div><div class="body"><div class="tabs"><button class="tab" data-act="stuback">Ученики</button><button class="tab on">Репетиторы</button></div><button class="btn w" data-act="newtut">+ Новый репетитор</button><div id="tlist" style="margin-top:12px">${loadBox}</div></div></div>`);
+  if(!canSync()){$('#tlist').innerHTML=errBox('Сначала войди как учитель в «Настройках».');return}
+  try{const d=await api('tutors_list');TL=d.tutors||[]}catch(e){$('#tlist').innerHTML=errBox(String(e.message||e));return}
+  $('#tcount').textContent=TL.length;
+  $('#tlist').innerHTML=TL.length?TL.map(t=>`<div class="tcard" data-act="edittut" data-id="${t.id}"><img src="${t.avatar||dflt('look_4')}" alt=""><div><b>${esc(t.name)}</b><br><span class="sm">${t.frames?'кадров персонажа: '+t.frames:'только аватар'}</span></div></div>`).join(''):'<p class="center">Пока нет репетиторов. Ученики без репетитора видят стандартного персонажа.</p>'}
+function tutorEditor(id){const t=TL.find(x=>x.id===id)||{name:'',avatar:'',frames:0};const D={tid:id||null,avatar:t.avatar||'',frames:{},photos:[]};
+  view(`<div class="win"><div class="tb pk"><span>tutor_editor.exe</span><button class="rst" data-act="tutback">назад</button></div><div class="body">
+   <label>Имя репетитора<input class="field" id="te_name" value="${esc(t.name)}" style="margin-top:4px"></label>
+   <b>1. Фото (1–3 шт.)</b><p class="sm" style="margin:4px 0 8px">Из фото сразу получится пиксельный аватар. Фото никуда не отправляется: оно обрабатывается прямо в браузере. Нажми на подходящий вариант.</p>
+   <label class="btn lilac fileb">Выбрать фото<input type="file" id="te_photos" accept="image/*" multiple></label><div class="thumbs" id="te_thumbs">${D.avatar?`<img src="${D.avatar}" class="sel" alt="">`:''}</div>
+   <b>2. Полный персонаж (по желанию)</b><p class="sm" style="margin:4px 0 8px">Чтобы репетитор менял эмоции и следил взглядом, сгенерируй в ChatGPT или Gemini два листа по готовым промптам (приложи те же фото) и загрузи их сюда. Фон должен быть ярко-зелёным.</p>
+   <button class="btn w" data-ed2="p1" style="margin-bottom:8px">Скопировать промпт: эмоции (лист 3×2)</button>
+   <label class="btn lilac fileb" style="margin-bottom:8px">Загрузить лист с эмоциями<input type="file" id="te_s1" accept="image/*"></label>
+   <button class="btn w" data-ed2="p2" style="margin-bottom:8px">Скопировать промпт: взгляд (лист 3×3)</button>
+   <label class="btn lilac fileb">Загрузить лист со взглядом<input type="file" id="te_s2" accept="image/*"></label>
+   <div id="te_frames" class="frames" style="margin-top:10px"></div><div id="te_msg" style="margin:8px 0"></div>
+   <div class="row" style="margin-bottom:0"><button class="btn pink" data-act="tutback">Отмена</button><button class="btn blue" id="te_save">Сохранить</button></div>
+   ${id?`<button class="del" data-act="deltut" data-id="${id}" style="margin-top:14px;padding:8px 14px;font-size:15px">Удалить репетитора</button>`:''}</div></div>`);
+  const msg=h=>{$('#te_msg').innerHTML=h};const showFrames=()=>{$('#te_frames').innerHTML=Object.entries(D.frames).map(([k,u])=>`<img src="${u}" title="${k}" alt="">`).join('')};
+  $('#te_photos').onchange=async e=>{const fs=[...e.target.files].slice(0,3);if(!fs.length)return;msg('обрабатываю…');D.photos=[];try{for(const f of fs)D.photos.push(await pixelAvatar(f));D.avatar=D.photos[0];
+    $('#te_thumbs').innerHTML=D.photos.map((u,i)=>`<img src="${u}" data-pi="${i}" class="${i===0?'sel':''}" alt="">`).join('');msg('')}catch(err){msg(errBox('Не получилось обработать фото'))}};
+  $('#te_thumbs').onclick=e=>{const im=e.target.closest('[data-pi]');if(!im)return;D.avatar=D.photos[+im.dataset.pi];document.querySelectorAll('#te_thumbs img').forEach(x=>x.classList.toggle('sel',x===im))};
+  const sheet=(id,cols,rows,names)=>{$(id).onchange=async e=>{const f=e.target.files[0];if(!f)return;msg('режу лист на кадры…');try{Object.assign(D.frames,await sliceSheet(f,cols,rows,names));showFrames();msg(px('check',14)+' кадров: '+Object.keys(D.frames).length)}catch(err){msg(errBox(err.message||'ошибка'))}}};
+  sheet('#te_s1',3,2,EMO_NAMES);sheet('#te_s2',3,3,LOOK_NAMES);
+  $('#view').onclick=e=>{const b=e.target.closest('[data-ed2]');if(!b)return;try{navigator.clipboard.writeText(PROMPTS[b.dataset.ed2]);b.textContent='Скопировано. Вставь в ChatGPT или Gemini и приложи фото'}catch(err){msg(errBox('Не удалось скопировать'))}};
+  $('#te_save').onclick=async()=>{const name=$('#te_name').value.trim();if(!name)return msg(errBox('Укажи имя репетитора'));msg('сохраняю…');
+    try{await api('tutor_save',{tid:D.tid,name,avatar:D.photos.length?D.avatar:undefined,frames:Object.keys(D.frames).length?D.frames:undefined},120000);tutors()}catch(e){msg(errBox(String(e.message||e)))}}}
 /* ================= start ================= */
-head();buildNav();document.body.classList.add('home');if($('#sideName'))$('#sideName').textContent=S.set.tutor+'.exe';
+applyTheme();head();buildNav();document.body.classList.add('home');setT('look');if($('#sideName'))$('#sideName').textContent=tName()+'.exe';
 if(isTeacher()){const nb=document.querySelector('[data-go=students]');if(nb)nb.classList.add('on');students()}
 else{document.querySelector('[data-go=home]').classList.add('on');home();pull().then(()=>{head();if($('#tutor'))home()})}
 </script>
