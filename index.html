@@ -109,6 +109,19 @@ body.kb .tip{bottom:76px}
 .center{text-align:center}
 .check{height:34px;background:repeating-conic-gradient(var(--k) 0 25%,var(--c) 0 50%) 0 0/34px 34px;border:3px solid var(--k);border-radius:8px;margin-bottom:16px}
 #side{display:none}.fabt{display:none}
+#nav{z-index:60}#nav .bar{background:var(--c);opacity:1;isolation:isolate}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tab{font:800 14px Manrope;border:3px solid var(--k);border-radius:10px;background:var(--c);padding:6px 12px;cursor:pointer;color:var(--k)}.tab.on{background:var(--y);box-shadow:3px 3px 0 var(--k)}
+.scard{border:3px solid var(--k);border-radius:12px;box-shadow:4px 4px 0 var(--k);background:#fff;padding:10px 12px;margin-bottom:12px;cursor:pointer}.scard:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--k)}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:18px}.sbar{height:12px;border:2px solid var(--k);background:var(--c);margin:8px 0}.sbar b{display:block;height:100%;background:var(--g)}.sm{font-size:13px;opacity:.85}
+.cards4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.sc{background:var(--c);border:3px solid var(--k);box-shadow:3px 3px 0 var(--k);border-radius:10px;padding:8px 10px}.sc b{font:14px 'Press Start 2P',monospace;display:block;margin-bottom:6px}.sc small{opacity:.75;font-weight:700}
+.gh{font:800 15px Manrope;margin:18px 0 8px}
+.hist{display:flex;align-items:flex-end;gap:6px;height:100px;border-bottom:3px solid var(--k);padding-top:18px}.hist i{flex:1;background:var(--b);border:2px solid var(--k);min-height:3px;position:relative}.hist i:last-child{background:var(--g)}.hist i span{position:absolute;top:-18px;left:0;right:0;text-align:center;font:800 11px Manrope;font-style:normal}
+.hlab{display:flex;gap:6px;font:700 11px Manrope;opacity:.7}.hlab span{flex:1;text-align:center}
+.days{display:flex;align-items:flex-end;gap:3px;height:76px;border-bottom:3px solid var(--k)}.days div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end}.days .o{background:var(--g);border:2px solid var(--k);border-bottom:0}.days .x{background:var(--r);border:2px solid var(--k);border-bottom:0}
+.hbar{display:flex;align-items:center;gap:8px;margin:7px 0}.hbar .t{flex:0 0 38%;font-weight:800;font-size:14px;overflow-wrap:anywhere}.hbar .bar{flex:1;height:18px;border:2px solid var(--k);background:var(--c)}.hbar .bar b{display:block;height:100%;background:var(--p)}.hbar .n{flex:0 0 auto;font-weight:800;font-size:13px;min-width:26px;text-align:right}
+.advice{display:flex;gap:12px;align-items:flex-start}.advice img{height:84px;border:3px solid var(--k);border-radius:10px;background:var(--l);flex:0 0 auto}
+.topic{border-left:4px solid var(--p);padding-left:10px;margin:10px 0}
+.legend{display:flex;gap:12px;font:700 12px Manrope;margin-top:6px}.legend i{display:inline-block;width:12px;height:12px;border:2px solid var(--k);vertical-align:-2px;margin-right:4px}
 .pxi{vertical-align:-2px;margin:0 4px}
 @media (min-width:900px){
  body{padding-bottom:40px}
@@ -156,7 +169,11 @@ const $=s=>document.querySelector(s);
 let S=load();
 function load(){let s={};try{s=JSON.parse(localStorage[LS]||'{}')}catch(e){}
   if(s.chat)s.chat=s.chat.filter(m=>m.t!=='…'&&m.t!=='...');
-  return Object.assign({words:[],chat:[],st:{streak:0,last:'',xp:0}},s,{set:Object.assign({sound:true,tilt:false,cap:false,worker:(window.CONFIG||{}).WORKER_URL||'',pass:'',tutor:'Tutor'},s.set||{})})}
+  const o=Object.assign({words:[],chat:[],st:{streak:0,last:'',xp:0,days:{}},cur:null,curName:''},s,{set:Object.assign({sound:true,tilt:false,cap:false,worker:(window.CONFIG||{}).WORKER_URL||'',pass:'',tutor:'Tutor',role:'',login:'',who:''},s.set||{})});
+  if(!o.set.role)o.set.role=o.set.pass?'teacher':'student';
+  if(!o.st.days)o.st.days={};return o}
+const isTeacher=()=>S.set.role==='teacher';
+const freshSt=()=>({streak:0,last:'',xp:0,days:{}});
 function save(push=true){normAll();localStorage[LS]=JSON.stringify(S);if(push)schedulePush();head()}
 const live=()=>S.words.filter(w=>!w.del);
 const ru=w=>((w.m||[]).find(x=>x.ru)||{}).ru||'—';
@@ -203,7 +220,7 @@ async function enableTilt(){
 /* ================= SRS ================= */
 function answer(w,ok){const now=Date.now();w.seen=(w.seen||0)+1;
   if(ok){w.ok=(w.ok||0)+1;w.box=Math.min(7,(w.box||0)+1);S.st.xp+=10}else{w.bad=(w.bad||0)+1;w.box=Math.max(0,(w.box||0)-3)}
-  w.due=ok||w.box>0?now+INTERVALS[w.box]*DAY:now+5*60e3;w.u=now;save();head()}
+  w.due=ok||w.box>0?now+INTERVALS[w.box]*DAY:now+5*60e3;w.u=now;const dk=new Date().toISOString().slice(0,10);S.st.days=S.st.days||{};const dd=S.st.days[dk]=S.st.days[dk]||{ok:0,bad:0};dd[ok?'ok':'bad']++;const ks=Object.keys(S.st.days);if(ks.length>60)ks.sort().slice(0,ks.length-60).forEach(k=>delete S.st.days[k]);save();head()}
 function pickSession(n){const now=Date.now(),all=live();
   let due=all.filter(w=>(w.due||0)<=now).sort((a,b)=>(a.due||0)-(b.due||0)).slice(0,n);
   if(due.length<n){const rest=all.filter(w=>!due.includes(w));
@@ -214,17 +231,24 @@ function pickSession(n){const now=Date.now(),all=live();
   return shuffle(due)}
 
 /* ================= sync (Cloudflare Worker) ================= */
-const canSync=()=>S.set.worker&&S.set.pass;
-let syncState='',aiErr='';
+const canSync=()=>S.set.worker&&S.set.pass&&(isTeacher()||S.set.login);
+let syncState='',aiErr='',syncErr='';
 async function api(task,body={},ms=45000){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),ms);let r;
-  try{r=await fetch(S.set.worker,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({task,pass:S.set.pass,...body}),signal:ac.signal})}
+  try{r=await fetch(S.set.worker,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({task,role:S.set.role||'teacher',login:S.set.login,pass:S.set.pass,sid:isTeacher()?S.cur:undefined,...body}),signal:ac.signal})}
   catch(e){throw new Error(e.name==='AbortError'?'ИИ не ответил за '+ms/1000+' с (слишком долго)':'нет связи с Worker: '+e.message)}finally{clearTimeout(tm)}
   const d=await r.json().catch(()=>({}));if(!r.ok||d.error)throw new Error(d.error||('HTTP '+r.status));return d}
 function merge(remote){const m=new Map(S.words.map(w=>[w.id,w]));
   remote.forEach(r=>{const l=m.get(r.id);if(!l||(r.u||0)>(l.u||0))m.set(r.id,r)});S.words=[...m.values()]}
-let pt;function schedulePush(){clearTimeout(pt);if(canSync())pt=setTimeout(push,1500)}
-async function pull(){if(!canSync())return;try{const d=await api('deck_get');merge(d.words||[]);save(false);syncState='ok'}catch(e){syncState='err'}}
-async function push(){if(!canSync())return;try{const d=await api('deck_get');merge(d.words||[]);await api('deck_put',{words:S.words});localStorage[LS]=JSON.stringify(S);syncState='ok'}catch(e){syncState='err'}}
+function mergeProf(r){if(!r)return;S.st.xp=Math.max(S.st.xp||0,r.xp||0);if((r.streak||0)>(S.st.streak||0)){S.st.streak=r.streak;S.st.last=r.last||S.st.last}
+  S.st.days=S.st.days||{};Object.entries(r.days||{}).forEach(([k,v])=>{const l=S.st.days[k]||{ok:0,bad:0};S.st.days[k]={ok:Math.max(l.ok||0,v.ok||0),bad:Math.max(l.bad||0,v.bad||0)}})}
+let pt;function schedulePush(){clearTimeout(pt);if(canSync())pt=setTimeout(push,isTeacher()?2000:15000)}
+function flushPush(){clearTimeout(pt);return push()}
+async function pull(){if(!canSync())return;try{
+  if(isTeacher()&&!S.cur){await api('whoami');syncState='ok';return}
+  const d=await api('deck_get');merge(d.words||[]);if(d.prof&&d.prof.st)mergeProf(d.prof.st);if(d.name)S.set.who=d.name;save(false);syncState='ok'}catch(e){syncState='err';syncErr=String(e.message||e)}}
+async function push(){if(!canSync()||(isTeacher()&&!S.cur))return;try{const d=await api('deck_get');merge(d.words||[]);if(d.prof&&d.prof.st)mergeProf(d.prof.st);
+  await api('deck_put',{words:S.words,st:isTeacher()?undefined:S.st});localStorage[LS]=JSON.stringify(S);syncState='ok'}catch(e){syncState='err';syncErr=String(e.message||e)}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flushPush();else pull().then(()=>{head();if($('#tutor')&&!isTeacher())home()})});
 
 /* ================= enrich (перевод, значения, примеры) ================= */
 async function enrich(items){
@@ -252,26 +276,29 @@ async function enrichOne(it,aiOnly){
 async function enrichMany(items,onEach,aiOnly){aiErr='';let idx=0;const out=new Array(items.length);
   await Promise.all([0,1,2].map(async()=>{while(idx<items.length){const i=idx++;out[i]=await enrichOne(items[i],aiOnly);if(onEach)onEach(i,out[i])}}));return out}
 /* ================= router ================= */
-function go(name,arg){sfx.click();sayTok++;document.body.classList.toggle('home',name==='home');
+function go(name,arg){sfx.click();sayTok++;
+  if(isTeacher()){if(name==='home')name='students';if(name==='words')return S.cur?studentView('words'):students()}
+  document.body.classList.toggle('home',name==='home'||name==='students');
   document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.go===name));
-  ({home,cards,game:()=>gameMenu(),add,words,chat,settings})[name](arg)}
+  ({home,students,cards,game:()=>gameMenu(),add,words,chat,settings})[name](arg)}
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-go],[data-act],[data-say]');
-  if(!e.target.closest('.tw'))$('#tip').hidden=true;
+  if(!e.target.closest('.tw,#tip'))$('#tip').hidden=true;
   if(!t)return;
   if(t.dataset.say){e.stopPropagation();speak(t.dataset.say);return}
   if(t.dataset.go){go(t.dataset.go,t.dataset.arg);return}
   const a=t.dataset.act;
+  if(teacherAct(a,t))return;
   if(a==='exp'){sfx.click();t.closest('.wrow').classList.toggle('open')}
-  if(a==='del'){const w=S.words.find(x=>x.id===t.dataset.id);if(w&&confirm('Удалить «'+w.w+'»?')){w.del=true;w.u=Date.now();save();words()}}
+  if(a==='del'){const w=S.words.find(x=>x.id===t.dataset.id);if(w&&confirm('Удалить «'+w.w+'»?')){w.del=true;w.u=Date.now();save();backToWords()}}
   if(a==='tilt'){enableTilt().then(ok=>{if(ok)settings()})}
   if(a==='chatreset'){if(confirm('Начать новый диалог? Переписка очистится.')){sfx.click();S.chat=[];save(false);chat()}}
   if(a==='edit'){sfx.click();editWord(t.dataset.id)}
   if(a==='redoall'){reenrich(live().filter(needFix),$('#redoout'))}
   if(a==='testai'){const o=$('#aitest');o.textContent='…';api('chat',{msgs:[{r:'u',t:'Say hi in five words.'}],words:[]}).then(d=>o.innerHTML=px('check',14)+' ИИ отвечает: '+esc(d.reply)).catch(e=>o.innerHTML=px('cross',14)+' '+esc(String(e.message||e).slice(0,300)))}
-  if(a==='sync'){syncState='…';settings();push().then(()=>settings())}
+  if(a==='sync'){syncState='…';settings();(isTeacher()&&!S.cur?pull():push()).then(()=>settings())}
 });
-document.addEventListener('change',e=>{const k=e.target.dataset.set;if(!k)return;S.set[k]=e.target.type==='checkbox'?e.target.checked:e.target.value.trim();save(false);if(k==='sound'&&S.set.sound)sfx.click();if(k==='tutor'&&$('#sideName'))$('#sideName').textContent=S.set.tutor+'.exe'});
+document.addEventListener('change',e=>{const k=e.target.dataset.set;if(!k)return;const old=S.set[k];S.set[k]=e.target.type==='checkbox'?e.target.checked:e.target.value.trim();save(false);if(k==='login'&&old!==S.set.login){S.words=[];S.chat=[];S.st=freshSt();S.set.who='';save(false)}if(k==='sound'&&S.set.sound)sfx.click();if(k==='tutor'&&$('#sideName'))$('#sideName').textContent=S.set.tutor+'.exe'});
 
 /* ================= HOME ================= */
 function home(){const L=live(),due=L.filter(w=>(w.due||0)<=Date.now()).length;
@@ -287,7 +314,7 @@ function home(){const L=live(),due=L.filter(w=>(w.due||0)<=Date.now()).length;
 
 /* ================= finish ================= */
 function finish(kind,ok,total){const t=new Date().toDateString(),y=new Date(Date.now()-DAY).toDateString();
-  if(S.st.last!==t){S.st.streak=S.st.last===y?S.st.streak+1:1;S.st.last=t}save();sfx.done();
+  if(S.st.last!==t){S.st.streak=S.st.last===y?S.st.streak+1:1;S.st.last=t}save();flushPush();sfx.done();
   const acc=total?Math.round(ok/total*100):0;
   view(`<div class="win"><div class="tb pk"><span>result.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body center">
    ${ic('trophy',90)}<h2 style="margin:8px 0">${acc>=80?'Отлично!':acc>=50?'Неплохо!':'Ничего, повторим!'}</h2>
@@ -371,8 +398,9 @@ function qMatch(it){const L=shuffle(it.ws),R=shuffle(it.ws),bad=new Set();let se
 
 /* ================= ADD WORDS ================= */
 function parseLines(t){return t.split(/[\n\r\u2028\u2029;]+/).map(x=>x.replace(/^\s*(?:[-•*·]+|\d+[.)])\s+/,'').replace(/[,\s]+$/,'').trim()).filter(Boolean).map(l=>{const m=l.match(/^(.+?)(?:\s[-–—]\s|\s*[:=]\s*)(.+)$/);return m?{w:m[1].trim(),ru:m[2].trim()}:{w:l}})}
-function add(){view(`<div class="win"><div class="tb pk"><span>add_words.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body">
-  <p style="margin-top:0">Вставь слова с урока, <b>по одному на строку</b>. Перевод, значения и примеры подтянутся сами. Свой перевод можно дать так: <code>run into - столкнуться</code></p>
+function add(){if(isTeacher()&&!S.cur)return view(`<div class="win"><div class="tb pk"><span>add_words.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body center"><img src="${A('cat_think')}" height="100" alt=""><p>Сначала выбери ученика, которому добавляем слова.</p><button class="btn big w" data-go="students">К ученикам</button></div></div>`);
+  view(`<div class="win"><div class="tb pk"><span>add_words.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body">
+  ${isTeacher()?`<p style="margin:0 0 10px">Ученик: <b>${esc(S.curName)}</b></p>`:''}<p style="margin-top:0">Вставь слова с урока, <b>по одному на строку</b>. Перевод, значения и примеры подтянутся сами. Свой перевод можно дать так: <code>run into - столкнуться</code></p>
   <textarea id="ta" rows="8" placeholder="serendipity&#10;to wander&#10;run into - столкнуться"></textarea>
   <button class="btn big w" id="addgo">Добавить слова</button><div class="log" id="log" style="margin-top:12px"></div></div></div>`);
   $('#addgo').onclick=async()=>{sfx.click();const known=new Set(live().map(w=>w.w.toLowerCase()));
@@ -388,7 +416,7 @@ function add(){view(`<div class="win"><div class="tb pk"><span>add_words.exe</sp
     await enrichMany(items,(i,g)=>{const it=items[i];g=g||{};if(!g.m||!g.m.length)g.m=[{pos:'',ru:it.ru||'?',def:'',ex:[]}];
       const w={id:uid(),w:it.w,ipa:g.ipa||'',m:g.m,box:0,due:0,seen:0,ok:0,bad:0,u:Date.now()};S.words.push(w);n++;
       const el=lg.children[i];if(el)el.innerHTML=`${px('check',14)} ${esc(it.w)} — ${esc(ru(w))}`});
-    save();sfx.done();if(aiErr&&canSync())$('#log').insertAdjacentHTML('beforeend',`<div class="ans" style="background:var(--p)">ИИ не ответил, слова разобраны обычным словарём (без примеров с переводом). Причина: ${esc(aiErr)}</div>`);$('#log').firstChild.src=A('cat_happy');$('#log').insertAdjacentHTML('beforeend',`<div class="ans">Добавлено: ${n}</div><button class="btn w" data-go="words">К словарю</button>`);$('#addgo').disabled=false;$('#ta').value=''}}
+    save();flushPush();sfx.done();if(aiErr&&canSync())$('#log').insertAdjacentHTML('beforeend',`<div class="ans" style="background:var(--p)">ИИ не ответил, слова разобраны обычным словарём (без примеров с переводом). Причина: ${esc(aiErr)}</div>`);$('#log').firstChild.src=A('cat_happy');$('#log').insertAdjacentHTML('beforeend',`<div class="ans">Добавлено: ${n}</div><button class="btn w" data-go="words">К словарю</button>`);$('#addgo').disabled=false;$('#ta').value=''}}
 
 async function reenrich(list,out){
   if(!canSync()){out.innerHTML='<div class="ans" style="background:var(--p)">Для ИИ-разбора нужно подключить Worker в «Настройках».</div>';return}
@@ -398,11 +426,12 @@ async function reenrich(list,out){
   save();const err=n<list.length?aiErr:'';
   out.innerHTML=`<div class="ans">Обновлено: ${n} из ${list.length}</div>`+(err?`<div class="ans" style="background:var(--p)">ИИ не ответил: ${esc(err)}</div>`:'')+`<button class="btn w" data-go="words">К словарю</button>`}
 /* ================= WORDS ================= */
-function words(){const L=live().sort((a,b)=>b.u-a.u);
-  view(`<div class="win"><div class="tb"><span>dictionary.exe</span><span>${L.length}</span></div><div class="body">
-   ${L.some(needFix)?'<button class="btn w lilac" data-act="redoall" style="margin-bottom:10px">Дополнить перевод и примеры (ИИ)</button><div id="redoout"></div>':''}
+const backToWords=()=>isTeacher()?studentView('words'):words();
+function words(target){const L=live().sort((a,b)=>b.u-a.u);
+  const inner=`${target?'<button class="btn w" data-go="add" style="margin-bottom:10px">+ Добавить слова ученику</button>':''}${L.some(needFix)?'<button class="btn w lilac" data-act="redoall" style="margin-bottom:10px">Дополнить перевод и примеры (ИИ)</button><div id="redoout"></div>':''}
    <input class="field" id="srch" placeholder="Поиск…" style="margin-top:0">
-   <div id="wl"></div></div></div>`);
+   <div id="wl"></div>`;
+  if(target)target.innerHTML=inner;else view(`<div class="win"><div class="tb"><span>dictionary.exe</span><span>${L.length}</span></div><div class="body">${inner}</div></div>`);
   const draw=f=>{$('#wl').innerHTML=L.filter(w=>!f||(w.w+ru(w)).toLowerCase().includes(f)).map(w=>`<div class="wrow"><div class="h" data-act="exp"><div><b style="font-size:18px">${esc(w.w)}</b> <span style="opacity:.7">— ${esc(ru(w))}</span></div><div style="display:flex;align-items:center;gap:8px"><div class="lv">${Array.from({length:7},(_,i)=>`<i class="${i<(w.box||0)?'f':''}"></i>`).join('')}</div><button class="xedit" data-act="edit" data-id="${w.id}" title="Изменить">${ic('pencil',18)}</button><button class="xdel" data-act="del" data-id="${w.id}" title="Удалить">${px('cross',12)}</button></div></div>
     <div class="d"><button class="sp" data-say="${esc(w.w)}">${ic('phones',20)}</button> <span class="ipa">${esc(w.ipa||'')}</span>${meanings(w)}<button class="btn" data-act="edit" data-id="${w.id}" style="padding:4px 12px;font-size:14px;margin:8px 8px 0 0">Изменить</button><button class="del" data-act="del" data-id="${w.id}">Удалить</button></div></div>`).join('')||'<p class="center">Пока пусто</p>'};
   draw('');$('#srch').oninput=e=>draw(e.target.value.toLowerCase().trim())}
@@ -429,7 +458,7 @@ function editWord(id){const w=S.words.find(x=>x.id===id);if(!w)return;
      <div class="row" style="margin-bottom:0"><button class="btn pink" data-ed="cancel">Отмена</button><button class="btn blue" data-ed="save">Сохранить</button></div></div></div>`);
     if(keep)scrollTo(0,y);
     $('#view').onclick=async e=>{const b=e.target.closest('[data-ed]');if(!b)return;const a=b.dataset.ed,i=+b.dataset.i,j=+b.dataset.j;sfx.click();
-      if(a==='cancel')return words();
+      if(a==='cancel')return backToWords();
       collect();
       if(a==='addm'){m.push({pos:'',ru:'',def:'',ex:[]});return draw(true)}
       if(a==='delm'){m.splice(i,1);if(!m.length)m.push({pos:'',ru:'',def:'',ex:[]});return draw(true)}
@@ -440,7 +469,7 @@ function editWord(id){const w=S.words.find(x=>x.id===id);if(!w)return;
         if(g&&g.m&&g.m.length){m.splice(0,m.length,...g.m);t.ipa=g.ipa||t.ipa;draw(true);$('#e_msg').textContent='Готово. Проверь и нажми «Сохранить».'}
         else{b.disabled=false;msg.textContent='ИИ не ответил: '+(aiErr||'ошибка')}return}
       if(a==='save'){const keep=m.filter(x=>x.ru||x.def||x.pos||(x.ex||[]).some(e=>e.en||e.ru)).map(x=>({...x,ex:(x.ex||[]).filter(e=>e.en||e.ru)}));
-        w.w=t.w;w.ipa=t.ipa;w.m=keep.length?keep:[{pos:'',ru:'',def:'',ex:[]}];w.u=Date.now();save();sfx.good();words()}}};
+        w.w=t.w;w.ipa=t.ipa;w.m=keep.length?keep:[{pos:'',ru:'',def:'',ex:[]}];w.u=Date.now();save();sfx.good();backToWords()}}};
   draw(false)}
 
 /* ================= CHAT ================= */
@@ -451,30 +480,47 @@ function chat(){if(!S.chat.length)S.chat.push({r:'a',t:"Hi! Let's chat in Englis
   drawMsgs();$('#csend').onmousedown=e=>e.preventDefault();$('#csend').onclick=send;$('#cin').onkeydown=e=>{if(e.key==='Enter')send()};
   $('#msgs').onclick=async e=>{const t=e.target.closest('.tw');if(!t)return;sfx.click();const tip=$('#tip');tip.hidden=false;tip.textContent='…';clearTimeout(window._tt);window._tt=setTimeout(()=>tip.hidden=true,6000);
     const word=t.textContent,sent=t.closest('.bub').textContent;
-    try{if(canSync()){const d=await api('context',{word,sentence:sent});tip.innerHTML=`<b>${esc(word)}</b> — ${esc(d.ru)}${d.note?`<br><small>${esc(d.note)}</small>`:''}`}
-      else{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(word)+'&langpair=en|ru');tip.innerHTML=`<b>${esc(word)}</b> — ${esc((await r.json()).responseData.translatedText)}`}}
+    try{let d;
+      if(canSync())d=await api('context',{word,sentence:sent});
+      else{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(word)+'&langpair=en|ru');d={ru:(await r.json()).responseData.translatedText}}
+      tip.innerHTML=`<b>${esc(word)}</b> — ${esc(d.ru)}${d.note?`<br><small>${esc(d.note)}</small>`:''}<br><button class="btn" id="tipadd" style="padding:3px 12px;font-size:13px;margin-top:6px">+ в словарь</button>`;
+      clearTimeout(window._tt);window._tt=setTimeout(()=>tip.hidden=true,12000);
+      $('#tipadd').onclick=()=>addFromChat(word,sent,d)}
     catch(err){tip.textContent='Ошибка: '+String(err.message||err).slice(0,200)}}}
+async function addFromChat(word,sent,d){const tip=$('#tip');clearTimeout(window._tt);
+  const base=cs(String(d.lemma||word).replace(/[^A-Za-z' -]/g,'')||word);
+  if(live().some(w=>w.w===base)){tip.textContent='«'+base+'» уже в словаре';window._tt=setTimeout(()=>tip.hidden=true,2500);return}
+  tip.textContent='Добавляю «'+base+'»…';
+  const it={w:base};if(base.toLowerCase()===word.toLowerCase()&&d.ru)it.ru=d.ru;
+  const g=(await enrichOne(it,false))||{};g.m=(g.m&&g.m.length)?g.m:[{pos:'',ru:d.ru||'',def:'',ex:[]}];
+  const s2=String(sent).trim();if(s2&&s2.length<220)g.m[0].ex=[{en:s2,ru:d.sentence_ru||''},...(g.m[0].ex||[])].slice(0,3);
+  S.words.push({id:uid(),w:base,ipa:g.ipa||'',m:g.m,box:0,due:0,seen:0,ok:0,bad:0,u:Date.now()});save();sfx.good();
+  tip.innerHTML=px('check',14)+' добавлено: <b>'+esc(base)+'</b>';window._tt=setTimeout(()=>tip.hidden=true,2500)}
 function drawMsgs(){const m=$('#msgs');if(!m)return;m.innerHTML=S.chat.slice(-40).map(x=>`<div class="m ${x.r==='u'?'u':''}"><img src="${A(x.r==='u'?'me_happy':'look_4')}" alt=""><div class="bub">${x.r==='a'?wrapWords(x.t):esc(x.t)}</div></div>`).join('');m.scrollTop=m.scrollHeight}
 async function send(){const inp=$('#cin'),t=inp.value.trim();if(!t)return;inp.value='';sfx.click();S.chat.push({r:'u',t});drawMsgs();
   if(!canSync()){S.chat.push({r:'a',t:'Connect the Worker in Settings, and I can answer you!'});save(false);drawMsgs();return}
   S.chat.push({r:'a',t:'…'});drawMsgs();
-  try{const ws=shuffle(live()).sort((a,b)=>(a.box||0)-(b.box||0)).slice(0,10).map(w=>w.w);
+  try{const ws=[...live()].sort((a,b)=>((b.bad||0)-(a.bad||0))||((a.box||0)-(b.box||0))||(Math.random()-.5)).slice(0,10).map(w=>w.w);
     const d=await api('chat',{msgs:S.chat.slice(0,-1).slice(-12).map(x=>({r:x.r,t:x.t})),words:ws,tutor:S.set.tutor});S.chat[S.chat.length-1].t=d.reply}
   catch(e){S.chat[S.chat.length-1].t='Oops: '+String(e.message||e).slice(0,300)}
   save(false);drawMsgs()}
 
 /* ================= SETTINGS ================= */
-function settings(){const st=syncState==='ok'?px('check',14)+' подключено':syncState==='err'?px('cross',14)+' ошибка':syncState==='…'?'…':canSync()?'не проверено':'выключено (данные только на этом устройстве)';
+function settings(){const T=isTeacher();
+  const st=syncState==='ok'?px('check',14)+' подключено'+(!T&&S.set.who?': '+esc(S.set.who):''):syncState==='err'?px('cross',14)+' '+esc(syncErr||'ошибка'):syncState==='…'?'…':canSync()?'не проверено':'выключено (данные только на этом устройстве)';
   view(`<div class="win"><div class="tb"><span>settings.exe</span><span class="dots"><i></i><i></i><i></i></span></div><div class="body">
    <label class="set"><span>Звуки</span><input type="checkbox" data-set="sound" ${S.set.sound?'checked':''}></label>
    <div class="set"><span>Наклон телефона (взгляд)</span><button class="btn" data-act="tilt">${S.set.tilt?'включён':'Включить'}</button></div><p id="sens" style="font-size:13px;margin:0 0 8px;opacity:.7">датчик: жду…</p>
    <label class="set"><span>Слова с большой буквы</span><input type="checkbox" data-set="cap" ${S.set.cap?'checked':''}></label>
    <label>Имя репетитора<input class="field" data-set="tutor" value="${esc(S.set.tutor)}"></label>
    <hr style="border:0;border-top:3px dashed var(--k);margin:12px 0">
-   <b>Общий словарь и ИИ</b><p style="font-size:14px;margin:4px 0">Нужен Cloudflare Worker (см. README). Одинаковый адрес и пароль у тебя и у репетитора.</p>
+   <b>Аккаунт</b>
+   <div class="row" style="margin:8px 0"><button class="btn ${T?'lilac':''}" data-act="role" data-v="student">Я ученик</button><button class="btn ${T?'':'lilac'}" data-act="role" data-v="teacher">Я учитель</button></div>
+   <p style="font-size:14px;margin:4px 0">${T?'Пароль учителя задан в Cloudflare (секрет PASS). Учеников создаёшь на вкладке «Ученики».':'Логин и пароль тебе выдал учитель.'}</p>
    <label>Адрес Worker<input class="field" data-set="worker" value="${esc(S.set.worker)}" placeholder="https://….workers.dev"></label>
-   <label>Пароль<input class="field" type="password" data-set="pass" value="${esc(S.set.pass)}"></label>
-   <button class="btn w" data-act="sync">Синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-10-20 j</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
+   ${T?'':`<label>Логин<input class="field" data-set="login" autocapitalize="off" value="${esc(S.set.login)}"></label>`}
+   <label>${T?'Пароль учителя':'Пароль'}<input class="field" type="password" data-set="pass" value="${esc(S.set.pass)}"></label>
+   <button class="btn w" data-act="sync">Войти и синхронизировать</button><button class="btn w lilac" data-act="testai" style="margin-top:10px">Проверить ИИ</button><p id="aitest" style="font-size:14px;margin:6px 0"></p><p style="font-size:12px;opacity:.5;margin:8px 0 0">версия сайта: 2026-11-12 k</p><p style="font-size:14px">Статус: ${st}</p></div></div>`)}
 
 /* ================= клавиатура и высота окна ================= */
 const vv=window.visualViewport;
@@ -488,8 +534,100 @@ document.addEventListener('keydown',e=>{
   if(card){if(e.key===' '||e.key==='Enter'){e.preventDefault();sfx.flip();card.classList.toggle('flip')}else if(e.key==='ArrowRight'){const y=$('#yes');if(y)y.click()}else if(e.key==='ArrowLeft'){const n=$('#no');if(n)n.click()}return}
   const nb=$('#nextb');if(nb&&(e.key==='Enter'||e.key===' ')){e.preventDefault();nb.click();return}
   if(/^[1-4]$/.test(e.key)){const o=[...document.querySelectorAll('.opts .opt')][+e.key-1];if(o&&!o.disabled)o.click()}});
+/* ================= УЧИТЕЛЬ ================= */
+let TD={list:[],data:null,tab:'prog'};
+const CATRU={articles:'Артикли',tenses:'Времена',prepositions:'Предлоги','word order':'Порядок слов',agreement:'Согласование',plurals:'Мн. число',pronouns:'Местоимения','modal verbs':'Модальные гл.',conditionals:'Условные','word choice':'Выбор слов',other:'Другое'};
+const ago=t=>{if(!t)return 'ещё не заходил';const d=Math.floor((Date.now()-t)/DAY);return d<=0?'сегодня':d===1?'вчера':d+' дн. назад'};
+const errBox=m=>`<div class="ans" style="background:var(--p)">${esc(m)}</div>`;
+const loadBox=`<div class="center" style="padding:20px"><img src="${A('cat_think')}" height="70" alt=""><br>загружаю…</div>`;
+const genPass=()=>Array.from({length:6},()=>'abcdefghjkmnpqrstuvwxyz23456789'[Math.random()*31|0]).join('');
+function buildNav(){const t=isTeacher();
+  $('#nav').innerHTML='<div class="bar">'+(t?
+   `<button class="nb" data-go="students">${ic('pc',26)}<span>Ученики</span></button><div class="fab" data-go="add" title="Добавить слова"><img src="${A('pencil')}" alt="" style="width:38px;height:38px;object-fit:contain;image-rendering:pixelated"><span class="fabt">Добавить слова</span></div><button class="nb" data-go="settings">${ic('floppy',26)}<span>Настройки</span></button>`:
+   `<button class="nb" data-go="home">${ic('pc',26)}<span>Главная</span></button><button class="nb" data-go="words">${ic('book',26)}<span>Слова</span></button><div class="fab" data-go="add" title="Добавить слова"><img src="${A('pencil')}" alt="" style="width:38px;height:38px;object-fit:contain;image-rendering:pixelated"><span class="fabt">Добавить слова</span></div><button class="nb" data-go="chat">${ic('bubble',26)}<span>Чат</span></button><button class="nb" data-go="settings">${ic('floppy',26)}<span>Настройки</span></button>`)+'</div>'}
+async function students(){
+  view(`<div class="win"><div class="tb"><span>students.exe</span><span id="scount"></span></div><div class="body"><button class="btn w" data-act="newstu">+ Новый ученик</button><div id="slist" style="margin-top:12px">${loadBox}</div></div></div>`);
+  if(!canSync()){$('#slist').innerHTML=errBox('Введи адрес Worker и пароль учителя в «Настройках».');return}
+  try{const d=await api('students_list');TD.list=d.students||[];syncState='ok'}catch(e){$('#slist').innerHTML=errBox(String(e.message||e));return}
+  drawStudents()}
+function drawStudents(){const el=$('#slist');if(!el)return;$('#scount').textContent=TD.list.length;
+  el.innerHTML=TD.list.length?TD.list.map(s=>{const acc=s.ok+s.bad?Math.round(s.ok/(s.ok+s.bad)*100):0,pct=s.words?Math.round(s.mastered/s.words*100):0;
+    return `<div class="scard" data-act="openstu" data-id="${s.id}"><div class="sh"><b>${esc(s.name)}</b><span class="ipa">${esc(s.login)}</span></div><div class="sbar"><b style="width:${pct}%"></b></div><div class="sm">слов: <b>${s.words}</b> · выучено: <b>${s.mastered}</b> · на повтор: <b>${s.due}</b> · точность: <b>${acc}%</b><br>был: ${ago(s.last)}</div></div>`}).join(''):'<p class="center">Пока нет учеников. Создай первого кнопкой выше.</p>'}
+function newStudentForm(){
+  view(`<div class="win"><div class="tb pk"><span>new_student.exe</span><button class="rst" data-act="stuback">назад</button></div><div class="body">
+   <label>Имя ученика<input class="field" id="ns_name" placeholder="Например, Айдар" style="margin-top:4px"></label>
+   <label>Логин (латиницей)<input class="field" id="ns_login" autocapitalize="off" placeholder="aydar" style="margin-top:4px"></label>
+   <label>Пароль<input class="field" id="ns_pass" value="${genPass()}" style="margin-top:4px"></label>
+   <button class="btn w" id="ns_go">Создать ученика</button><div id="ns_out" style="margin-top:12px"></div></div></div>`);
+  $('#ns_go').onclick=async()=>{const name=$('#ns_name').value.trim(),login=$('#ns_login').value.trim(),spass=$('#ns_pass').value;const out=$('#ns_out');out.textContent='…';
+    try{await api('student_create',{name,login,spass});const site=location.origin+location.pathname;
+      out.innerHTML=`<div class="ans">Ученик создан. Передай ему:<br>Сайт: ${esc(site)}<br>Логин: <b>${esc(login.toLowerCase())}</b><br>Пароль: <b>${esc(spass)}</b><br><small>Пароль потом не показывается, его можно только сменить.</small></div><button class="btn w" id="ns_copy">Скопировать</button><button class="btn w pink" data-act="stuback" style="margin-top:8px">К ученикам</button>`;
+      $('#ns_copy').onclick=()=>{try{navigator.clipboard.writeText(`Сайт: ${site}\nЛогин: ${login.toLowerCase()}\nПароль: ${spass}`)}catch(e){}$('#ns_copy').textContent='Скопировано'}}
+    catch(e){out.innerHTML=errBox(String(e.message||e))}}}
+async function openStudent(id){view(`<div class="win"><div class="tb pk"><span>student.exe</span></div><div class="body">${loadBox}</div></div>`);
+  try{const d=await api('student_get',{sid:id});S.cur=id;S.curName=d.student.name;S.words=d.words||[];TD.data=d;TD.tab='prog';save(false);studentView('prog')}
+  catch(e){students();alert(String(e.message||e))}}
+function studentView(tab){
+  if(!S.cur)return students();
+  if(!TD.data||TD.data.student.id!==S.cur)return openStudent(S.cur);
+  TD.tab=tab||TD.tab;
+  const tabs=[['prog','Прогресс'],['chat','Чат'],['words','Слова'],['acc','Доступ']];
+  view(`<div class="win"><div class="tb pk"><span>${esc(TD.data.student.name)}.exe</span><button class="rst" data-act="stuback">ученики</button></div><div class="body">
+   <div class="tabs">${tabs.map(([k,l])=>`<button class="tab ${TD.tab===k?'on':''}" data-act="tab" data-v="${k}">${l}</button>`).join('')}</div><div id="tabbody"></div></div></div>`);
+  const b=$('#tabbody');({prog:tabProg,chat:tabChat,words:()=>words(b),acc:tabAcc})[TD.tab](b)}
+function tabProg(b){const L=live(),now=Date.now(),st=(TD.data.prof&&TD.data.prof.st)||{};
+  let ok=0,bad=0,due=0,mast=0;const hist=Array(8).fill(0);
+  L.forEach(w=>{ok+=w.ok||0;bad+=w.bad||0;hist[Math.min(7,w.box||0)]++;if((w.due||0)<=now)due++;if((w.box||0)>=5)mast++});
+  const acc=ok+bad?Math.round(ok/(ok+bad)*100):0,mx=Math.max(1,...hist);
+  const days=[];for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*DAY),k=d.toISOString().slice(0,10);days.push([k,d.getDate(),(st.days||{})[k]||{ok:0,bad:0}])}
+  const dm=Math.max(1,...days.map(x=>x[2].ok+x[2].bad));
+  const hard=L.filter(w=>(w.bad||0)>0).sort((x,y)=>(y.bad||0)-(x.bad||0)).slice(0,8),hm=Math.max(1,...hard.map(w=>w.bad||0));
+  b.innerHTML=`<div class="cards4"><div class="sc"><b>${L.length}</b><small>слов в словаре</small></div><div class="sc"><b>${mast}</b><small>выучено</small></div><div class="sc"><b>${due}</b><small>на повторение</small></div><div class="sc"><b>${acc}%</b><small>точность ответов</small></div></div>
+   <div class="cards4"><div class="sc"><b>${ic('flame',18)} ${st.streak||0}</b><small>дней подряд</small></div><div class="sc"><b>${ic('coin',18)} ${st.xp||0}</b><small>очков</small></div></div>
+   <p class="sm" style="margin:0">Последний вход: ${ago(TD.data.prof&&TD.data.prof.last)}</p>
+   <div class="gh">Уровни слов</div>
+   <div class="hist">${hist.map(n=>`<i style="height:${n/mx*100}%"><span>${n||''}</span></i>`).join('')}</div>
+   <div class="hlab">${hist.map((_,i)=>`<span>${i===0?'новые':i===7?'знает':i}</span>`).join('')}</div>
+   <div class="gh">Активность за 14 дней</div>
+   <div class="days">${days.map(([k,d,v])=>`<div title="${k}"><i class="x" style="height:${v.bad/dm*100}%"></i><i class="o" style="height:${v.ok/dm*100}%"></i></div>`).join('')}</div>
+   <div class="hlab">${days.map(([k,d])=>`<span>${d}</span>`).join('')}</div>
+   <div class="legend"><span><i style="background:var(--g)"></i>верно</span><span><i style="background:var(--r)"></i>ошибки</span></div>
+   <div class="gh">Слова, в которых чаще всего ошибается</div>
+   ${hard.length?hard.map(w=>`<div class="hbar"><span class="t">${esc(w.w)}</span><span class="bar"><b style="width:${(w.bad||0)/hm*100}%"></b></span><span class="n">${w.bad}</span></div>`).join(''):'<p class="sm">Пока нет ошибок.</p>'}`}
+function tabChat(b){const errs=TD.data.errors||[],counts={};errs.forEach(e=>{if(e.ser)counts[e.cat]=(counts[e.cat]||0)+1});
+  const cats=Object.entries(counts).sort((x,y)=>y[1]-x[1]),cm=Math.max(1,...cats.map(x=>x[1]));
+  const seen=new Set(),ex=errs.filter(e=>e.ser).reverse().filter(e=>{const k=e.said+'|'+e.better;if(seen.has(k))return false;seen.add(k);return true}).slice(0,6),sum=TD.data.sum,sd=sum&&sum.data;
+  b.innerHTML=`<div class="gh" style="margin-top:0">Частые ошибки в чате</div>
+   ${cats.length?cats.map(([c,n])=>`<div class="hbar"><span class="t">${CATRU[c]||c}</span><span class="bar"><b style="width:${n/cm*100}%"></b></span><span class="n">${n}</span></div>`).join(''):'<p class="sm">Пока нет данных: ученик ещё не писал в чат или ошибок не было.</p>'}
+   ${ex.length?`<div class="gh">Примеры</div>${ex.map(e=>`<div class="ex"><span class="pos">${CATRU[e.cat]||e.cat}</span> ${esc(e.said)} → <b>${esc(e.better)}</b></div>`).join('')}`:''}
+   <div class="win" style="margin-top:16px;margin-bottom:0"><div class="tb lc"><span>advice.exe</span></div><div class="body"><div class="advice"><img src="${A('tutor_think')}" alt=""><div>
+    ${sd?`<p style="margin:0 0 8px">${esc(sd.summary||'')}</p>${(sd.topics||[]).map(t=>`<div class="topic"><b>${esc(t.name)}</b><br>${esc(t.why||'')}<br><small>Урок: ${esc(t.lesson||'')}</small></div>`).join('')}${sd.advice?`<p style="margin:8px 0 0"><b>Совет:</b> ${esc(sd.advice)}</p>`:''}<p class="sm" style="margin:8px 0 0">обновлено: ${new Date(sum.at).toLocaleDateString('ru-RU')}</p>`:'<p style="margin:0">Сводки пока нет. Нажми кнопку, и ИИ разберёт ошибки и слова ученика.</p>'}
+   </div></div><button class="btn w lilac" data-act="refsum" style="margin-top:12px">${sd?'Обновить сводку (ИИ)':'Сделать сводку (ИИ)'}</button><div id="sumout"></div></div></div>`}
+function tabAcc(b){const s=TD.data.student;
+  b.innerHTML=`<p style="margin-top:0">Логин: <b>${esc(s.login)}</b></p>
+   <label>Имя<input class="field" id="ac_name" value="${esc(s.name)}" style="margin-top:4px"></label><button class="btn w" data-act="stusave">Сохранить имя</button>
+   <label style="display:block;margin-top:14px">Новый пароль (минимум 4 символа)<input class="field" id="ac_pass" style="margin-top:4px"></label><button class="btn w lilac" data-act="stupass">Сменить пароль</button>
+   <button class="btn w" data-act="stuimport" style="margin-top:14px">Передать ему старый общий словарь</button>
+   <button class="del" data-act="studel" style="margin-top:14px;padding:8px 14px;font-size:15px">Удалить ученика</button><div id="acout" style="margin-top:10px"></div>`}
+function teacherAct(a,t){
+  const out=m=>{const o=$('#acout')||$('#sumout');if(o)o.innerHTML=m};
+  if(a==='newstu'){newStudentForm();return true}
+  if(a==='openstu'){openStudent(t.dataset.id);return true}
+  if(a==='stuback'){students();return true}
+  if(a==='tab'){studentView(t.dataset.v);return true}
+  if(a==='refsum'){const o=$('#sumout');o.textContent='ИИ анализирует…';t.disabled=true;
+    api('chat_summary',{sid:S.cur,refresh:true},90000).then(d=>{TD.data.sum=d;tabChat($('#tabbody'))}).catch(e=>{t.disabled=false;o.innerHTML=errBox(String(e.message||e))});return true}
+  if(a==='stusave'){api('student_update',{sid:S.cur,name:$('#ac_name').value}).then(()=>{TD.data.student.name=$('#ac_name').value.trim()||TD.data.student.name;S.curName=TD.data.student.name;out(px('check',14)+' сохранено')}).catch(e=>out(errBox(e.message)));return true}
+  if(a==='stupass'){const p=$('#ac_pass').value;api('student_update',{sid:S.cur,spass:p}).then(()=>{out(px('check',14)+' пароль изменён. Новый пароль: <b>'+esc(p)+'</b>');$('#ac_pass').value=''}).catch(e=>out(errBox(e.message)));return true}
+  if(a==='stuimport'){api('import_legacy',{sid:S.cur}).then(d=>{out(px('check',14)+' перенесено слов: '+d.count);openStudent(S.cur)}).catch(e=>out(errBox(e.message)));return true}
+  if(a==='studel'){if(confirm('Удалить ученика «'+S.curName+'» со всеми словами и статистикой? Это нельзя отменить.'))api('student_delete',{sid:S.cur}).then(()=>{S.cur=null;S.curName='';S.words=[];TD.data=null;save(false);students()}).catch(e=>out(errBox(e.message)));return true}
+  if(a==='role'){const v=t.dataset.v;if(v===S.set.role)return true;
+    if(confirm('Сменить роль? Данные на этом устройстве (слова, чат) очистятся. На сервере всё сохранится.')){S.set.role=v;S.set.pass='';S.set.login='';S.set.who='';S.words=[];S.chat=[];S.cur=null;S.curName='';S.st=freshSt();TD.data=null;syncState='';save(false);buildNav();settings()}return true}
+  return false}
 /* ================= start ================= */
-head();document.body.classList.add('home');if($('#sideName'))$('#sideName').textContent=S.set.tutor+'.exe';document.querySelector('[data-go=home]').classList.add('on');home();pull().then(()=>{head();if($('#tutor'))home()});
+head();buildNav();document.body.classList.add('home');if($('#sideName'))$('#sideName').textContent=S.set.tutor+'.exe';
+if(isTeacher()){const nb=document.querySelector('[data-go=students]');if(nb)nb.classList.add('on');students()}
+else{document.querySelector('[data-go=home]').classList.add('on');home();pull().then(()=>{head();if($('#tutor'))home()})}
 </script>
 </body>
 </html>
